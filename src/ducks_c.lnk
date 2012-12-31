@@ -1,0 +1,4 @@
+system  dos32x
+option  map
+name    ducks.exe
+file    main.obj

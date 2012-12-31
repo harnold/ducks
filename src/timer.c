@@ -1,0 +1,22 @@
+#include <dos.h>
+
+#include "timer.h"
+
+#define TIMER_INT       0x1C
+
+timer_handler timer_default_handler;
+
+void timer_init()
+{
+    timer_default_handler = _dos_getvect(TIMER_INT);
+}
+
+void timer_exit()
+{
+    _dos_setvect(TIMER_INT, timer_default_handler);
+}
+
+void timer_set_handler(timer_handler handler)
+{
+    _dos_setvect(TIMER_INT, handler);
+}

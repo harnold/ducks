@@ -9,7 +9,7 @@ EXE = ducks.exe
 CFLAGS = -bt=dos -za99 -6r -mf -oahkl+tx -fo=$^*.obj
 LFLAGS = @ducks_c.lnk
 
-OBJS = dpmi.obj main.obj mouse.obj timer.obj
+OBJS = dpmi.obj main.obj mouse.obj timer.obj vga.obj
 
 .suffixes:
 .suffixes: .exe .obj .c .h

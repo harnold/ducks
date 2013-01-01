@@ -6,7 +6,7 @@
 
 #define MOUSE_INT       0x33
 
-int mouse_init()
+int mouse_init(void)
 {
     union REGS regs;
 
@@ -20,7 +20,7 @@ int mouse_init()
         return error(0, "No mouse driver found");
 }
 
-void mouse_exit()
+void mouse_exit(void)
 {
 }
 

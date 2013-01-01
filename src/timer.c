@@ -6,12 +6,12 @@
 
 timer_handler timer_default_handler;
 
-void timer_init()
+void timer_init(void)
 {
     timer_default_handler = _dos_getvect(TIMER_INT);
 }
 
-void timer_exit()
+void timer_exit(void)
 {
     _dos_setvect(TIMER_INT, timer_default_handler);
 }

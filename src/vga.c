@@ -60,7 +60,7 @@ void vga_set_palette(const struct vga_palette *pal)
     }
 }
 
-void vga_wait_for_retrace()
+void vga_wait_for_retrace(void)
 {
     while ((inp(VGA_INPUT_STATUS_1) & 8) != 0)
         ;

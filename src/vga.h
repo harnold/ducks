@@ -27,7 +27,7 @@ void vga_set_video_mode(unsigned int mode);
 void vga_set_color(int index, rgb_t rgb);
 void vga_get_color(int index, rgb_t *rgb);
 void vga_set_palette(const struct vga_palette *pal);
-void vga_wait_for_retrace();
+void vga_wait_for_retrace(void);
 
 static inline rgb_t make_rgb(unsigned int r, unsigned int g, unsigned int b)
 {

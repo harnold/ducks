@@ -1,4 +1,4 @@
 system  dos32x
 option  map
 name    ducks.exe
-file    dpmi.obj, main.obj, mouse.obj, timer.obj, vga.obj
+file    dpmi.obj, error.obj, main.obj, mouse.obj, timer.obj, vga.obj

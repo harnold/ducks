@@ -1,17 +1,23 @@
 #include <i86.h>
 #include <string.h>
 
+#include "error.h"
 #include "mouse.h"
 
 #define MOUSE_INT       0x33
 
-void mouse_init()
+int mouse_init()
 {
     union REGS regs;
 
     memset(&regs, 0, sizeof(regs));
     regs.w.ax = 0x00;
     int386(MOUSE_INT, &regs, &regs);
+
+    if (regs.w.ax == 0xFFFF)
+        return 0;
+    else
+        return error(0, "No mouse driver found");
 }
 
 void mouse_exit()

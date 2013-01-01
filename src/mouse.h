@@ -8,7 +8,7 @@ enum mouse_buttons {
     MOUSE_MID_BUTTON    = 4
 };
 
-void mouse_init();
+int mouse_init();
 void mouse_exit();
 void mouse_get_status(enum mouse_buttons *buttons, int *dx, int *dy);
 void mouse_get_buttons(enum mouse_buttons *buttons);

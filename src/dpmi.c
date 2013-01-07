@@ -5,8 +5,8 @@
 
 #define DPMI_INT        0x31
 
-#define HWORD(x)        ((uint16_t) (((x) >> 16) & 0xFFFF))
-#define LWORD(x)        ((uint16_t) ((x) & 0xFFFF))
+#define HWORD(x)        (((uint32_t) (x) & 0xFFFF0000) >> 16)
+#define LWORD(x)        ((uint32_t) (x) & 0xFFFF)
 
 int dpmi_map_physical_addr(uint32_t phys_addr, uint32_t size, uint32_t *lin_addr)
 {

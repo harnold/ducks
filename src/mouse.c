@@ -14,10 +14,10 @@ int mouse_init(void)
     regs.w.ax = 0x00;
     int386(MOUSE_INT, &regs, &regs);
 
-    if (regs.w.ax == 0xFFFF)
-        return 0;
-    else
+    if (regs.w.ax != 0xFFFF)
         return error(0, "No mouse driver found");
+
+    return 0;
 }
 
 void mouse_exit(void)

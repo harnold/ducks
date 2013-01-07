@@ -23,7 +23,8 @@ PACKED_STRUCT dpmi_info {
     uint16_t es, ds, fs, gs, ip, cs, sp, ss;
 };
 
-uint32_t dpmi_get_pmptr(uint32_t rmptr);
+static inline void *dpmi_ptr_to_rm_address(uint32_t rm_addr);
+
 int dpmi_alloc_descriptor(uint16_t *selector);
 int dpmi_free_descriptor(uint16_t selector);
 int dpmi_get_base_addr(uint16_t selector, uint32_t *lin_addr);
@@ -35,5 +36,10 @@ int dpmi_unmap_physical_addr(uint32_t lin_addr);
 int dpmi_rm_int(uint8_t intno, struct dpmi_info *info);
 int dpmi_rm_alloc(uint16_t size, uint16_t *segment, uint16_t *selector);
 int dpmi_rm_free(uint16_t selector);
+
+static inline void *dpmi_ptr_to_rm_address(uint32_t rm_addr)
+{
+    return (void *) (((rm_addr & 0xffff0000) >> 12) + (rm_addr & 0xffff));
+}
 
 #endif

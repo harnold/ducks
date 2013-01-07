@@ -8,11 +8,6 @@
 #define HWORD(x)        ((uint16_t) (((x) >> 16) & 0xFFFF))
 #define LWORD(x)        ((uint16_t) ((x) & 0xFFFF))
 
-uint32_t dpmi_get_pmptr(uint32_t rmptr)
-{
-    return ((rmptr & 0xffff0000) >> 12) + (rmptr & 0xffff);
-}
-
 int dpmi_alloc_descriptor(uint16_t *selector)
 {
     union REGS regs;

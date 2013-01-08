@@ -25,7 +25,7 @@ void vga_set_video_mode(unsigned int mode)
     union REGS regs;
 
     memset(&regs, 0, sizeof(regs));
-    regs.w.ax = (uint16_t) (mode & 0xFF);
+    regs.h.al = (uint8_t) mode;
     int386(VGA_INT, &regs, &regs);
 }
 

@@ -9,6 +9,47 @@
 #define HWORD(x)        ((uint32_t) (x) >> 16)
 #define LWORD(x)        ((uint32_t) (x) & 0xFFFF)
 
+static const char *const error_messages[] = {
+    "Unknown error",
+    "Function not supported",
+    "Invalid state",
+    "System integrity",
+    "Deadlock detected",
+    "Request cancelled",
+    "Resource unavailable",
+    "Descriptor unavailable",
+    "Linear memory unavailable",
+    "Physical memory unavailable",
+    "Backing store unavailable",
+    "Callback unavailable",
+    "Handle unavailable",
+    "Lock count exceeded",
+    "Resource owned exclusively",
+    "Resource owned shared",
+    "Invalid value",
+    "Invalid selector",
+    "Invalid handle",
+    "Invalid callback",
+    "Invalid linear address",
+    "Invalid request"
+};
+
+static const char *error_message(unsigned int error_code)
+{
+    if (error_code < 0x8000 + sizeof(error_messages) / sizeof(const char *))
+        return error_messages[0x8000 + error_code];
+    else
+        return "Unknown error";
+}
+
+static int dpmi_error(unsigned int error_code)
+{
+    if (error_code < 0x8000)
+        return error(0, "DOS error: %i", error_code);
+    else
+        return error(0, "DPMI error: %s", error_message(error_code));
+}
+
 int dpmi_map_physical_address(uint32_t phys_addr, uint32_t size, uint32_t *lin_addr)
 {
     union REGS regs;

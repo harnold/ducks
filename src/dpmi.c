@@ -5,7 +5,7 @@
 
 #define DPMI_INT        0x31
 
-#define HWORD(x)        (((uint32_t) (x) & 0xFFFF0000) >> 16)
+#define HWORD(x)        ((uint32_t) (x) >> 16)
 #define LWORD(x)        ((uint32_t) (x) & 0xFFFF)
 
 int dpmi_map_physical_address(uint32_t phys_addr, uint32_t size, uint32_t *lin_addr)
@@ -23,7 +23,7 @@ int dpmi_map_physical_address(uint32_t phys_addr, uint32_t size, uint32_t *lin_a
     if (regs.x.cflag != 0)
         return DPMI_ERROR;
 
-    *lin_addr = ((uint32_t) regs.w.bx << 16 ) + regs.w.cx;
+    *lin_addr = ((uint32_t) regs.w.bx << 16 ) | regs.w.cx;
     return DPMI_SUCCESS;
 }
 

@@ -44,25 +44,6 @@ int dpmi_unmap_physical_address(uint32_t lin_addr)
     return DPMI_SUCCESS;
 }
 
-int dpmi_simulate_rm_interrupt(unsigned int inum, struct dpmi_rm_info *info)
-{
-    union REGS regs;
-    struct SREGS sregs;
-
-    memset(&regs, 0, sizeof(regs));
-    memset(&sregs, 0, sizeof(sregs));
-    regs.w.ax = 0x0300;
-    regs.h.bl = (uint8_t) inum;
-    sregs.es = FP_SEG(info);
-    regs.x.edi = FP_OFF(info);
-    int386x(DPMI_INT, &regs, &regs, &sregs);
-
-    if (regs.x.cflag != 0)
-        return DPMI_ERROR;
-
-    return DPMI_SUCCESS;
-}
-
 int dpmi_allocate_dos_memory(uint32_t size, uint16_t *segment, uint16_t *selector)
 {
     union REGS regs;
@@ -94,6 +75,25 @@ int dpmi_free_dos_memory(uint16_t selector)
     regs.w.ax = 0x0101;
     regs.w.dx = selector;
     int386(DPMI_INT, &regs, &regs);
+
+    if (regs.x.cflag != 0)
+        return DPMI_ERROR;
+
+    return DPMI_SUCCESS;
+}
+
+int dpmi_simulate_rm_interrupt(unsigned int inum, struct dpmi_rm_info *info)
+{
+    union REGS regs;
+    struct SREGS sregs;
+
+    memset(&regs, 0, sizeof(regs));
+    memset(&sregs, 0, sizeof(sregs));
+    regs.w.ax = 0x0300;
+    regs.h.bl = (uint8_t) inum;
+    sregs.es = FP_SEG(info);
+    regs.x.edi = FP_OFF(info);
+    int386x(DPMI_INT, &regs, &regs, &sregs);
 
     if (regs.x.cflag != 0)
         return DPMI_ERROR;

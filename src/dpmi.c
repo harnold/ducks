@@ -2,6 +2,7 @@
 #include <string.h>
 
 #include "dpmi.h"
+#include "error.h"
 
 #define DPMI_INT        0x31
 
@@ -65,6 +66,11 @@ int dpmi_simulate_rm_interrupt(unsigned int inum, struct dpmi_rm_info *info)
 int dpmi_allocate_dos_memory(uint32_t size, uint16_t *segment, uint16_t *selector)
 {
     union REGS regs;
+
+    if (size > 0xFFFF0) {
+        return error(0, "Cannot allocate DOS memory block of more than %u bytes "
+                        "(%u bytes requested)", 0xFFFF0, size);
+    }
 
     memset(&regs, 0, sizeof(regs));
     regs.w.ax = 0x0100;

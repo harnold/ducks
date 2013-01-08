@@ -10,7 +10,7 @@ enum {
     DPMI_ERROR = -1
 };
 
-PACKED_STRUCT dpmi_info {
+PACKED_STRUCT dpmi_rm_info {
     uint32_t edi;
     uint32_t esi;
     uint32_t ebp;
@@ -23,10 +23,10 @@ PACKED_STRUCT dpmi_info {
     uint16_t es, ds, fs, gs, ip, cs, sp, ss;
 };
 
-int dpmi_map_physical_addr(uint32_t phys_addr, uint32_t size, uint32_t *lin_addr);
-int dpmi_unmap_physical_addr(uint32_t lin_addr);
-int dpmi_rm_int(uint8_t intno, struct dpmi_info *info);
-int dpmi_rm_alloc(uint16_t size, uint16_t *segment, uint16_t *selector);
-int dpmi_rm_free(uint16_t selector);
+int dpmi_map_physical_address(uint32_t phys_addr, uint32_t size, uint32_t *lin_addr);
+int dpmi_unmap_physical_address(uint32_t lin_addr);
+int dpmi_simulate_rm_interrupt(unsigned int inum, struct dpmi_rm_info *info);
+int dpmi_allocate_dos_memory(uint32_t size, uint16_t *segment, uint16_t *selector);
+int dpmi_free_dos_memory(uint16_t selector);
 
 #endif

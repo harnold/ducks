@@ -8,7 +8,7 @@
 #define HWORD(x)        (((uint32_t) (x) & 0xFFFF0000) >> 16)
 #define LWORD(x)        ((uint32_t) (x) & 0xFFFF)
 
-int dpmi_map_physical_addr(uint32_t phys_addr, uint32_t size, uint32_t *lin_addr)
+int dpmi_map_physical_address(uint32_t phys_addr, uint32_t size, uint32_t *lin_addr)
 {
     union REGS regs;
 
@@ -27,7 +27,7 @@ int dpmi_map_physical_addr(uint32_t phys_addr, uint32_t size, uint32_t *lin_addr
     return DPMI_SUCCESS;
 }
 
-int dpmi_unmap_physical_addr(uint32_t lin_addr)
+int dpmi_unmap_physical_address(uint32_t lin_addr)
 {
     union REGS regs;
 
@@ -43,7 +43,7 @@ int dpmi_unmap_physical_addr(uint32_t lin_addr)
     return DPMI_SUCCESS;
 }
 
-int dpmi_rm_int(uint8_t intno, struct dpmi_info *info)
+int dpmi_simulate_rm_interrupt(unsigned int inum, struct dpmi_rm_info *info)
 {
     union REGS regs;
     struct SREGS sregs;
@@ -51,7 +51,7 @@ int dpmi_rm_int(uint8_t intno, struct dpmi_info *info)
     memset(&regs, 0, sizeof(regs));
     memset(&sregs, 0, sizeof(sregs));
     regs.w.ax = 0x0300;
-    regs.h.bl = intno;
+    regs.h.bl = (uint8_t) inum;
     sregs.es = FP_SEG(info);
     regs.x.edi = FP_OFF(info);
     int386x(DPMI_INT, &regs, &regs, &sregs);
@@ -62,7 +62,7 @@ int dpmi_rm_int(uint8_t intno, struct dpmi_info *info)
     return DPMI_SUCCESS;
 }
 
-int dpmi_rm_alloc(uint16_t size, uint16_t *segment, uint16_t *selector)
+int dpmi_allocate_dos_memory(uint32_t size, uint16_t *segment, uint16_t *selector)
 {
     union REGS regs;
 
@@ -80,7 +80,7 @@ int dpmi_rm_alloc(uint16_t size, uint16_t *segment, uint16_t *selector)
     return DPMI_SUCCESS;
 }
 
-int dpmi_rm_free(uint16_t selector)
+int dpmi_free_dos_memory(uint16_t selector)
 {
     union REGS regs;
 

@@ -63,10 +63,10 @@ int dpmi_map_physical_address(uint32_t phys_addr, uint32_t size, uint32_t *lin_a
     int386(DPMI_INT, &regs, &regs);
 
     if (regs.x.cflag != 0)
-        return DPMI_ERROR;
+        return dpmi_error(regs.w.ax);
 
     *lin_addr = ((uint32_t) regs.w.bx << 16 ) | regs.w.cx;
-    return DPMI_SUCCESS;
+    return 0;
 }
 
 int dpmi_unmap_physical_address(uint32_t lin_addr)
@@ -80,9 +80,9 @@ int dpmi_unmap_physical_address(uint32_t lin_addr)
     int386(DPMI_INT, &regs, &regs);
 
     if (regs.x.cflag != 0)
-        return DPMI_ERROR;
+        return dpmi_error(regs.w.ax);
 
-    return DPMI_SUCCESS;
+    return 0;
 }
 
 int dpmi_allocate_dos_memory(uint32_t size, uint16_t *segment, uint16_t *selector)
@@ -90,7 +90,7 @@ int dpmi_allocate_dos_memory(uint32_t size, uint16_t *segment, uint16_t *selecto
     union REGS regs;
 
     if (size > 0xFFFF0) {
-        return error(0, "Cannot allocate DOS memory block of more than %u bytes "
+        return error(0, "Cannot allocate DOS memory block larger than %u bytes "
                         "(%u bytes requested)", 0xFFFF0, size);
     }
 
@@ -100,12 +100,11 @@ int dpmi_allocate_dos_memory(uint32_t size, uint16_t *segment, uint16_t *selecto
     int386(DPMI_INT, &regs, &regs);
 
     if (regs.x.cflag != 0)
-        return DPMI_ERROR;
+        return dpmi_error(regs.w.ax);
 
     *segment  = regs.w.ax;
     *selector = regs.w.dx;
-
-    return DPMI_SUCCESS;
+    return 0;
 }
 
 int dpmi_free_dos_memory(uint16_t selector)
@@ -118,9 +117,9 @@ int dpmi_free_dos_memory(uint16_t selector)
     int386(DPMI_INT, &regs, &regs);
 
     if (regs.x.cflag != 0)
-        return DPMI_ERROR;
+        return dpmi_error(regs.w.ax);
 
-    return DPMI_SUCCESS;
+    return 0;
 }
 
 int dpmi_simulate_rm_interrupt(unsigned int inum, struct dpmi_rm_info *info)
@@ -137,7 +136,7 @@ int dpmi_simulate_rm_interrupt(unsigned int inum, struct dpmi_rm_info *info)
     int386x(DPMI_INT, &regs, &regs, &sregs);
 
     if (regs.x.cflag != 0)
-        return DPMI_ERROR;
+        return dpmi_error(regs.w.ax);
 
-    return DPMI_SUCCESS;
+    return 0;
 }

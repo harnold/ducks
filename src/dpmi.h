@@ -5,11 +5,6 @@
 
 #include "compat.h"
 
-enum {
-    DPMI_SUCCESS = 0,
-    DPMI_ERROR = -1
-};
-
 PACKED_STRUCT dpmi_rm_info {
     uint32_t edi;
     uint32_t esi;

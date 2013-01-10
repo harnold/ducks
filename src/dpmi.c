@@ -140,3 +140,39 @@ int dpmi_simulate_rm_interrupt(unsigned int inum, struct dpmi_rm_info *info)
 
     return 0;
 }
+
+int dpmi_lock_linear_region(uint32_t lin_addr, uint32_t size)
+{
+    union REGS regs;
+
+    memset(&regs, 0, sizeof(regs));
+    regs.w.ax = 0x600;
+    regs.w.bx = HWORD(lin_addr);
+    regs.w.cx = LWORD(lin_addr);
+    regs.w.si = HWORD(lin_addr);
+    regs.w.di = LWORD(lin_addr);
+    int386(DPMI_INT, &regs, &regs);
+
+    if (regs.x.cflag != 0)
+        return dpmi_error(regs.w.ax);
+
+    return 0;
+}
+
+int dpmi_unlock_linear_region(uint32_t lin_addr, uint32_t size)
+{
+    union REGS regs;
+
+    memset(&regs, 0, sizeof(regs));
+    regs.w.ax = 0x600;
+    regs.w.bx = HWORD(lin_addr);
+    regs.w.cx = LWORD(lin_addr);
+    regs.w.si = HWORD(lin_addr);
+    regs.w.di = LWORD(lin_addr);
+    int386(DPMI_INT, &regs, &regs);
+
+    if (regs.x.cflag != 0)
+        return dpmi_error(regs.w.ax);
+
+    return 0;
+}

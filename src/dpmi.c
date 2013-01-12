@@ -36,7 +36,7 @@ static const char *const error_messages[] = {
 
 static const char *error_message(unsigned int error_code)
 {
-    if (error_code < 0x8000 + sizeof(error_messages) / sizeof(const char *))
+    if (error_code < 0x8000 + array_length(error_messages))
         return error_messages[0x8000 + error_code];
     else
         return "Unknown error";

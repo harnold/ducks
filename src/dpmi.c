@@ -9,37 +9,47 @@
 #define HWORD(x)        ((uint32_t) (x) >> 16)
 #define LWORD(x)        ((uint32_t) (x) & 0xFFFF)
 
-static const char *const error_messages[] = {
-    "Unknown error",
-    "Function not supported",
-    "Invalid state",
-    "System integrity",
-    "Deadlock detected",
-    "Request cancelled",
-    "Resource unavailable",
-    "Descriptor unavailable",
-    "Linear memory unavailable",
-    "Physical memory unavailable",
-    "Backing store unavailable",
-    "Callback unavailable",
-    "Handle unavailable",
-    "Lock count exceeded",
-    "Resource owned exclusively",
-    "Resource owned shared",
-    "Invalid value",
-    "Invalid selector",
-    "Invalid handle",
-    "Invalid callback",
-    "Invalid linear address",
-    "Invalid request"
+struct dpmi_error {
+    unsigned int code;
+    const char *message;
 };
 
-static const char *error_message(unsigned int error_code)
+static const struct dpmi_error dpmi_error_table[] = {
+    0x8001, "Function not supported",
+    0x8002, "Invalid state",
+    0x8003, "System integrity",
+    0x8004, "Deadlock detected",
+    0x8005, "Request cancelled",
+    0x8010, "Resource unavailable",
+    0x8011, "Descriptor unavailable",
+    0x8012, "Linear memory unavailable",
+    0x8013, "Physical memory unavailable",
+    0x8014, "Backing store unavailable",
+    0x8015, "Callback unavailable",
+    0x8016, "Handle unavailable",
+    0x8017, "Lock count exceeded",
+    0x8018, "Resource owned exclusively",
+    0x8019, "Resource owned shared",
+    0x8021, "Invalid value",
+    0x8022, "Invalid selector",
+    0x8023, "Invalid handle",
+    0x8024, "Invalid callback",
+    0x8025, "Invalid linear address",
+    0x8026, "Invalid request"
+};
+
+static const char *dpmi_error_message(unsigned int error_code)
 {
-    if (error_code < 0x8000 + array_length(error_messages))
-        return error_messages[0x8000 + error_code];
-    else
-        return "Unknown error";
+    const struct dpmi_error *e = &dpmi_error_table;
+    const struct dpmi_error *end = e + array_length(dpmi_error_table);
+
+    while (e < end) {
+        if (error_code == e->code)
+            return e->message;
+        e++;
+    }
+
+    return "Unknown error";
 }
 
 static int dpmi_error(unsigned int error_code)
@@ -47,7 +57,7 @@ static int dpmi_error(unsigned int error_code)
     if (error_code < 0x8000)
         return error(0, "DOS error: %i", error_code);
     else
-        return error(0, "DPMI error: %s", error_message(error_code));
+        return error(0, "DPMI error: %s", dpmi_error_message(error_code));
 }
 
 int dpmi_map_physical_address(uint32_t phys_addr, uint32_t size, uint32_t *lin_addr)

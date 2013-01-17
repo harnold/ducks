@@ -6,9 +6,6 @@
 
 #define DPMI_INT        0x31
 
-#define HWORD(x)        ((uint32_t) (x) >> 16)
-#define LWORD(x)        ((uint32_t) (x) & 0xFFFF)
-
 struct dpmi_error {
     unsigned int code;
     const char *message;
@@ -66,10 +63,10 @@ int dpmi_map_physical_address(uint32_t phys_addr, uint32_t size, uint32_t *lin_a
 
     memset(&regs, 0, sizeof(regs));
     regs.w.ax = 0x0800;
-    regs.w.bx = HWORD(phys_addr);
-    regs.w.cx = LWORD(phys_addr);
-    regs.w.si = HWORD(size);
-    regs.w.di = LWORD(size);
+    regs.w.bx = hword(phys_addr);
+    regs.w.cx = lword(phys_addr);
+    regs.w.si = hword(size);
+    regs.w.di = lword(size);
     int386(DPMI_INT, &regs, &regs);
 
     if (regs.x.cflag != 0)
@@ -85,8 +82,8 @@ int dpmi_unmap_physical_address(uint32_t lin_addr)
 
     memset(&regs, 0, sizeof(regs));
     regs.w.ax = 0x0801;
-    regs.w.bx = HWORD(lin_addr);
-    regs.w.cx = LWORD(lin_addr);
+    regs.w.bx = hword(lin_addr);
+    regs.w.cx = lword(lin_addr);
     int386(DPMI_INT, &regs, &regs);
 
     if (regs.x.cflag != 0)
@@ -157,10 +154,10 @@ int dpmi_lock_linear_region(uint32_t lin_addr, uint32_t size)
 
     memset(&regs, 0, sizeof(regs));
     regs.w.ax = 0x600;
-    regs.w.bx = HWORD(lin_addr);
-    regs.w.cx = LWORD(lin_addr);
-    regs.w.si = HWORD(lin_addr);
-    regs.w.di = LWORD(lin_addr);
+    regs.w.bx = hword(lin_addr);
+    regs.w.cx = lword(lin_addr);
+    regs.w.si = hword(lin_addr);
+    regs.w.di = lword(lin_addr);
     int386(DPMI_INT, &regs, &regs);
 
     if (regs.x.cflag != 0)
@@ -175,10 +172,10 @@ int dpmi_unlock_linear_region(uint32_t lin_addr, uint32_t size)
 
     memset(&regs, 0, sizeof(regs));
     regs.w.ax = 0x600;
-    regs.w.bx = HWORD(lin_addr);
-    regs.w.cx = LWORD(lin_addr);
-    regs.w.si = HWORD(lin_addr);
-    regs.w.di = LWORD(lin_addr);
+    regs.w.bx = hword(lin_addr);
+    regs.w.cx = lword(lin_addr);
+    regs.w.si = hword(lin_addr);
+    regs.w.di = lword(lin_addr);
     int386(DPMI_INT, &regs, &regs);
 
     if (regs.x.cflag != 0)

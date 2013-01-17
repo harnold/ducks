@@ -1,8 +1,6 @@
 #ifndef DPMI_H
 #define DPMI_H
 
-#include <stdint.h>
-
 #include "compat.h"
 
 PACKED_STRUCT dpmi_rm_info {

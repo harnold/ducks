@@ -35,4 +35,16 @@ int dpmi_simulate_rm_interrupt(unsigned int inum, struct dpmi_rm_info *info);
 int dpmi_lock_linear_region(uint32_t lin_addr, uint32_t size);
 int dpmi_unlock_linear_region(uint32_t lin_addr, uint32_t size);
 
+/* Other */
+
+static inline void *dpmi_get_rm_segment_start(uint16_t rm_seg)
+{
+    return (void *) ((uint32_t) rm_seg << 4);
+}
+
+static inline void *dpmi_get_rm_ptr(uint32_t rm_addr)
+{
+    return (void *) (((rm_addr & 0xFFFF0000) >> 12) | (rm_addr & 0xFFFF));
+}
+
 #endif

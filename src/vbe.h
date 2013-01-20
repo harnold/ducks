@@ -2,6 +2,7 @@
 #define VBE_H
 
 #include <stddef.h>
+#include <stdint.h>
 
 enum vbe_capabilities {
     VBE_CAP_DAC_SWITCHABLE_TO_8_BIT             = 1 << 0,
@@ -12,13 +13,13 @@ enum vbe_capabilities {
 };
 
 struct vbe_info {
-    unsigned int vbe_signature;
-    unsigned short vbe_version;
+    char vbe_signature[4];
+    uint16_t vbe_version;
     char *oem_string;
-    unsigned int capabilities;
-    short *video_modes;
-    size_t total_memory;
-    unsigned short oem_software_rev;
+    uint32_t capabilities;
+    uint16_t *video_modes;
+    uint16_t total_memory;
+    uint16_t oem_software_rev;
     char *oem_vendor_name;
     char *oem_product_name;
     char *oem_product_rev;

@@ -4,11 +4,11 @@
 #include <stddef.h>
 
 enum vbe_capabilities {
-    VBE_DAC_SWITCHABLE_TO_8_BIT         = 1,
-    VBE_NO_VGA_CONTROLLER               = 2,
-    VBE_RAMDAC_REQUIRES_VBLANK          = 4,
-    VBE_STEREO_SYNC_SUPPORTED           = 8,
-    VBE_STEREO_SYNC_VIA_EVC_CONNECTOR   = 16
+    VBE_CAP_DAC_SWITCHABLE_TO_8_BIT             = 1 << 0,
+    VBE_CAP_NO_VGA_CONTROLLER                   = 1 << 1,
+    VBE_CAP_RAMDAC_REQUIRES_VBLANK              = 1 << 2,
+    VBE_CAP_STEREO_SYNC_SUPPORTED               = 1 << 3,
+    VBE_CAP_STEREO_SYNC_VIA_EVC_CONNECTOR       = 1 << 4
 };
 
 struct vbe_info {

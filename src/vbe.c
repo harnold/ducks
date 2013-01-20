@@ -32,7 +32,7 @@ int vbe_get_info(struct vbe_info *info)
     if (dpmi_allocate_dos_memory(sizeof(*ib), &rm_seg, &rm_sel) != 0)
         goto failure;
 
-    ib = dpmi_get_rm_segment_start(rm_seg);
+    ib = dpmi_ptr_to_rm_segment(rm_seg);
     memset(ib, 0, sizeof(*ib));
     ib->vbe_signature = 'VBE2';
 
@@ -53,18 +53,18 @@ int vbe_get_info(struct vbe_info *info)
     info->vbe_signature = ib->vbe_signature;
     info->vbe_version = ib->vbe_version;
     info->capabilities = ib->capabilities;
-    info->video_modes = dpmi_get_rm_ptr(ib->video_mode_ptr);
+    info->video_modes = dpmi_ptr_to_rm_address(ib->video_mode_ptr);
     info->total_memory = ib->total_memory;
     info->oem_software_rev = ib->oem_software_rev;
 
     info->oem_string =
-        strdup((char *) dpmi_get_rm_ptr(ib->oem_string_ptr));
+        strdup((char *) dpmi_ptr_to_rm_address(ib->oem_string_ptr));
     info->oem_vendor_name =
-        strdup((char *) dpmi_get_rm_ptr(ib->oem_vendor_name_ptr));
+        strdup((char *) dpmi_ptr_to_rm_address(ib->oem_vendor_name_ptr));
     info->oem_product_name =
-        strdup((char *) dpmi_get_rm_ptr(ib->oem_product_name_ptr));
+        strdup((char *) dpmi_ptr_to_rm_address(ib->oem_product_name_ptr));
     info->oem_product_rev =
-        strdup((char *) dpmi_get_rm_ptr(ib->oem_product_rev_ptr));
+        strdup((char *) dpmi_ptr_to_rm_address(ib->oem_product_rev_ptr));
 
     if (dpmi_free_dos_memory(rm_sel)) {
         vbe_destroy_info(info);

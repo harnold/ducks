@@ -8,7 +8,7 @@
 
 enum vga_mode {
     VGA_TEXT_MODE               = 0x03,
-    VGA_320x200x256             = 0x13
+    VGA_MODE_320x200_256        = 0x13
 };
 
 typedef uint32_t rgb_t;

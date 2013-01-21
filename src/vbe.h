@@ -58,6 +58,14 @@ enum vbe_mode_flags {
     VBE_MF_PRESERVE_DISPLAY_MEMORY      = 1 << 15
 };
 
+enum vbe_save_restore_flags {
+    VBE_SR_CONTROLLER_STATE             = 1 << 0,
+    VBE_SR_BIOS_DATA_STATE              = 1 << 1,
+    VBE_SR_DAC_STATE                    = 1 << 2,
+    VBE_SR_REGISTER_STATE               = 1 << 3,
+    VBE_SR_COMPLETE_STATE               = 0x0F
+};
+
 struct vbe_info {
     char vbe_signature[4];
     uint16_t vbe_version;
@@ -109,5 +117,8 @@ void vbe_destroy_info(struct vbe_info *info);
 int vbe_get_mode_info(unsigned int mode, struct vbe_mode_info *mode_info);
 int vbe_set_mode(unsigned int mode, unsigned int flags);
 int vbe_get_mode(unsigned int *mode, unsigned int *flags);
+int vbe_save_state(unsigned int flags, uint32_t *handle);
+int vbe_restore_state(unsigned int flags, uint32_t handle);
+int vbe_free_state(uint32_t handle);
 
 #endif

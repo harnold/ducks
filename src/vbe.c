@@ -193,3 +193,61 @@ int vbe_get_mode(unsigned int *mode, unsigned int *flags)
     *flags = rmi.ebx & 0xC000;
     return 0;
 }
+
+int vbe_save_state(unsigned int flags, uint32_t *handle)
+{
+    struct dpmi_rm_info rmi;
+
+    memset(&rmi, 0, sizeof(rmi));
+    rmi.edx = 0x00;
+    rmi.ecx = flags & 0x0F;
+
+    if (vbe_call_function(0x4F04, &rmi) != 0)
+        goto failure;
+
+    uint16_t rm_seg, rm_sel;
+    uint32_t rm_size = rmi.ebx << 6;
+
+    if (dpmi_allocate_dos_memory(rm_size, &rm_seg, &rm_sel) != 0)
+        goto failure;
+
+    memset(&rmi, 0, sizeof(rmi));
+    rmi.edx = 0x01;
+    rmi.ecx = flags & 0x0F;
+    rmi.es = rm_seg;
+
+    if (vbe_call_function(0x4F04, &rmi) != 0) {
+        dpmi_free_dos_memory(rm_sel);
+        goto failure;
+    }
+
+    *handle = rm_sel;
+    return 0;
+
+failure:
+
+    return error(0, "Saving VBE state failed");
+}
+
+int vbe_restore_state(unsigned int flags, uint32_t handle)
+{
+    struct dpmi_rm_info rmi;
+
+    memset(&rmi, 0, sizeof(rmi));
+    rmi.edx = 0x02;
+    rmi.ecx = flags & 0x0F;
+    rmi.es = (uint16_t) handle;
+
+    if (vbe_call_function(0x4F04, &rmi) != 0)
+        return error(0, "Restoring VBE state failed");
+
+    return 0;
+}
+
+int vbe_free_state(uint32_t handle)
+{
+    if (dpmi_free_dos_memory((uint16_t) handle) != 0)
+        return error(0, "Freeing VBE state failed");
+
+    return 0;
+}

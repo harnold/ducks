@@ -22,8 +22,8 @@ static inline unsigned int rgb_r(rgb_t rgb);
 static inline unsigned int rgb_r(rgb_t rgb);
 static inline unsigned int rgb_g(rgb_t rgb);
 
-void vga_get_video_mode(unsigned int *mode);
-void vga_set_video_mode(unsigned int mode);
+void vga_get_mode(unsigned int *mode);
+void vga_set_mode(unsigned int mode);
 void vga_set_color(int index, rgb_t rgb);
 void vga_get_color(int index, rgb_t *rgb);
 void vga_set_palette(const struct vga_palette *pal);

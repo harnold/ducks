@@ -10,7 +10,7 @@
 #define VGA_DAC_DATA            0x3C9
 #define VGA_INPUT_STATUS_1      0x3DA
 
-void vga_get_video_mode(unsigned int *mode)
+void vga_get_mode(unsigned int *mode)
 {
     union REGS regs;
 
@@ -20,7 +20,7 @@ void vga_get_video_mode(unsigned int *mode)
     *mode = regs.h.al;
 }
 
-void vga_set_video_mode(unsigned int mode)
+void vga_set_mode(unsigned int mode)
 {
     union REGS regs;
 

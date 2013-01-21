@@ -166,3 +166,30 @@ failure:
 
     return error(0, "Obtaining VBE mode information failed");
 }
+
+int vbe_set_mode(unsigned int mode, unsigned int flags)
+{
+    struct dpmi_rm_info rmi;
+
+    memset(&rmi, 0, sizeof(rmi));
+    rmi.ebx = (mode | flags) & 0xC1FF;
+
+    if (vbe_call_function(0x4F02, &rmi) != 0)
+        return error(0, "Setting VBE mode %Xh failed", mode);
+
+    return 0;
+}
+
+int vbe_get_mode(unsigned int *mode, unsigned int *flags)
+{
+    struct dpmi_rm_info rmi;
+
+    memset(&rmi, 0, sizeof(rmi));
+
+    if (vbe_call_function(0x4F03, &rmi) != 0)
+        return error(0, "Getting VBE mode failed");
+
+    *mode = rmi.ebx & 0x3FFF;
+    *flags = rmi.ebx & 0xC000;
+    return 0;
+}

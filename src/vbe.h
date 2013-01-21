@@ -44,6 +44,20 @@ enum vbe_memory_model {
     VBE_MM_YUV                          = 0x07
 };
 
+enum vbe_mode {
+    VBE_MODE_640x480_256                = 0x101,
+    VBE_MODE_800x600_256                = 0x103,
+    VBE_MODE_1024x768_256               = 0x105,
+    VBE_MODE_1280x1024_256              = 0x107
+};
+
+enum vbe_mode_flags {
+    VBE_MF_WINDOWED_FRAME_BUFFER        = 0,
+    VBE_MF_LINEAR_FRAME_BUFFER          = 1 << 14,
+    VBE_MF_CLEAR_DISPLAY_MEMORY         = 0,
+    VBE_MF_PRESERVE_DISPLAY_MEMORY      = 1 << 15
+};
+
 struct vbe_info {
     char vbe_signature[4];
     uint16_t vbe_version;
@@ -93,5 +107,7 @@ struct vbe_mode_info {
 int vbe_get_info(struct vbe_info *info);
 void vbe_destroy_info(struct vbe_info *info);
 int vbe_get_mode_info(unsigned int mode, struct vbe_mode_info *mode_info);
+int vbe_set_mode(unsigned int mode, unsigned int flags);
+int vbe_get_mode(unsigned int *mode, unsigned int *flags);
 
 #endif

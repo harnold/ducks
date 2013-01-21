@@ -24,40 +24,7 @@ PACKED_STRUCT vbe_info_block {
 };
 
 PACKED_STRUCT vbe_mode_info_block {
-    uint16_t mode_attributes;
-    uint8_t win_a_attributes;
-    uint8_t win_b_attributes;
-    uint16_t win_granularity;
-    uint16_t win_size;
-    uint16_t win_a_segment;
-    uint16_t win_b_segment;
-    uint32_t win_func_ptr;
-    uint16_t bytes_per_scanline;
-    uint16_t x_resolution;
-    uint16_t y_resolution;
-    uint8_t x_char_size;
-    uint8_t y_char_size;
-    uint8_t number_of_planes;
-    uint8_t bits_per_pixel;
-    uint8_t number_of_banks;
-    uint8_t memory_model;
-    uint8_t bank_size;
-    uint8_t number_of_image_pages;
-    uint8_t reserved_1;
-    uint8_t red_mask_size;
-    uint8_t red_field_position;
-    uint8_t green_mask_size;
-    uint8_t green_field_position;
-    uint8_t blue_mask_size;
-    uint8_t blue_field_position;
-    uint8_t rsvd_mask_size;
-    uint8_t rsvd_field_position;
-    uint8_t direct_color_mode_info;
-    uint32_t phys_base_ptr;
-    uint32_t reserved_2;
-    uint16_t reserved_3;
-    uint8_t reserved_4[17];
-    uint8_t reserved_5[189];
+    uint8_t _data[256];
 };
 
 inline static int vbe_call_function(unsigned int fn, struct dpmi_rm_info *rmi)
@@ -151,8 +118,7 @@ int vbe_get_mode_info(unsigned int mode, struct vbe_mode_info *info)
         goto failure;
     }
 
-    static_assert(offsetof(struct vbe_mode_info, phys_base_ptr) ==
-                  offsetof(struct vbe_mode_info_block, phys_base_ptr),
+    static_assert(offsetof(struct vbe_mode_info, phys_base_ptr) == 40,
                   "Wrong alignment of structure members");
 
     memcpy(info, ib, sizeof(*info));

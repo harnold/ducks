@@ -60,6 +60,17 @@ PACKED_STRUCT vbe_mode_info_block {
     uint8_t reserved_5[189];
 };
 
+inline static int vbe_call_function(unsigned int fn, struct dpmi_rm_info *rmi)
+{
+    rmi->eax = fn;
+
+    if (dpmi_simulate_rm_interrupt(VBE_INT, rmi) != 0 ||
+        (rmi->eax & 0xFF00) != 0)
+        return -1;
+
+    return 0;
+}
+
 int vbe_get_info(struct vbe_info *info)
 {
     struct dpmi_rm_info rmi;
@@ -74,15 +85,9 @@ int vbe_get_info(struct vbe_info *info)
     ib->vbe_signature = 'VBE2';
 
     memset(&rmi, 0, sizeof(rmi));
-    rmi.eax = 0x4F00;
     rmi.es = rm_seg;
 
-    if (dpmi_simulate_rm_interrupt(VBE_INT, &rmi) != 0) {
-        dpmi_free_dos_memory(rm_sel);
-        goto failure;
-    }
-
-    if ((rmi.eax & 0xFF00) != 0) {
+    if (vbe_call_function(0x4F00, &rmi) != 0) {
         dpmi_free_dos_memory(rm_sel);
         goto failure;
     }
@@ -138,16 +143,10 @@ int vbe_get_mode_info(unsigned int mode, struct vbe_mode_info *info)
     memset(ib, 0, sizeof(*ib));
 
     memset(&rmi, 0, sizeof(rmi));
-    rmi.eax = 0x4F01;
     rmi.ecx = mode;
     rmi.es = rm_seg;
 
-    if (dpmi_simulate_rm_interrupt(VBE_INT, &rmi) != 0) {
-        dpmi_free_dos_memory(rm_sel);
-        goto failure;
-    }
-
-    if ((rmi.eax & 0xFF00) != 0) {
+    if (vbe_call_function(0x4F01, &rmi) != 0) {
         dpmi_free_dos_memory(rm_sel);
         goto failure;
     }

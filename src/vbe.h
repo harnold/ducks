@@ -66,6 +66,11 @@ enum vbe_save_restore_flags {
     VBE_SR_COMPLETE_STATE               = 0x0F
 };
 
+enum vbe_scanline_length {
+    VBE_SL_BYTES_PER_SCANLINE,
+    VBE_SL_PIXELS_PER_SCANLINE
+};
+
 struct vbe_info {
     char vbe_signature[4];
     uint16_t vbe_version;
@@ -120,5 +125,14 @@ int vbe_get_mode(unsigned int *mode, unsigned int *flags);
 int vbe_save_state(unsigned int flags, uint32_t *handle);
 int vbe_restore_state(unsigned int flags, uint32_t handle);
 int vbe_free_state(uint32_t handle);
+int vbe_get_logical_scanline_length(unsigned int *bytes_per_scanline,
+                                    unsigned int *pixels_per_scanline);
+int vbe_get_maximum_scanline_length(unsigned int *bytes_per_scanline,
+                                    unsigned int *pixels_per_scanline);
+int vbe_set_logical_scanline_length(enum vbe_scanline_length unit,
+                                    unsigned int length,
+                                    unsigned int *bytes_per_scanline,
+                                    unsigned int *pixels_per_scanline,
+                                    unsigned int *max_scanlines);
 
 #endif

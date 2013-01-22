@@ -1,3 +1,4 @@
+#include <assert.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -217,6 +218,73 @@ int vbe_free_state(uint32_t handle)
 {
     if (dpmi_free_dos_memory((uint16_t) handle) != 0)
         return vbe_error("Could not free memory for saved state");
+
+    return 0;
+}
+
+int vbe_get_logical_scanline_length(unsigned int *bytes_per_scanline,
+                                    unsigned int *pixels_per_scanline)
+{
+    struct dpmi_rm_info rmi;
+
+    memset(&rmi, 0, sizeof(rmi));
+    rmi.ebx = 0x01;
+
+    if (vbe_call_function(0x4F06, &rmi) != 0)
+        return vbe_error("Could not get logical scanline length");
+
+
+    if (bytes_per_scanline != NULL)
+        *bytes_per_scanline = rmi.ebx;
+    if (pixels_per_scanline != NULL)
+        *pixels_per_scanline = rmi.ecx;
+
+    return 0;
+}
+
+int vbe_get_maximum_scanline_length(unsigned int *bytes_per_scanline,
+                                    unsigned int *pixels_per_scanline)
+{
+    struct dpmi_rm_info rmi;
+
+    memset(&rmi, 0, sizeof(rmi));
+    rmi.ebx = 0x03;
+
+    if (vbe_call_function(0x4F06, &rmi) != 0)
+        return vbe_error("Could not get maximum scanline length");
+
+    if (bytes_per_scanline != NULL)
+        *bytes_per_scanline = rmi.ebx;
+    if (pixels_per_scanline != NULL)
+        *pixels_per_scanline = rmi.ecx;
+
+    return 0;
+}
+
+int vbe_set_logical_scanline_length(enum vbe_scanline_length unit,
+                                    unsigned int length,
+                                    unsigned int *bytes_per_scanline,
+                                    unsigned int *pixels_per_scanline,
+                                    unsigned int *max_scanlines)
+{
+    assert(unit == VBE_SL_BYTES_PER_SCANLINE ||
+           unit == VBE_SL_PIXELS_PER_SCANLINE);
+
+    struct dpmi_rm_info rmi;
+
+    memset(&rmi, 0, sizeof(rmi));
+    rmi.ebx = (unit == VBE_SL_BYTES_PER_SCANLINE) ? 0x02 : 0x00;
+    rmi.ecx = length & 0xFFFF;
+
+    if (vbe_call_function(0x4F06, &rmi) != 0)
+        return vbe_error("Could not set logical scanline length");
+
+    if (bytes_per_scanline != NULL)
+        *bytes_per_scanline = rmi.ebx;
+    if (pixels_per_scanline != NULL)
+        *pixels_per_scanline = rmi.ecx;
+    if (max_scanlines != NULL)
+        *max_scanlines = rmi.edx;
 
     return 0;
 }

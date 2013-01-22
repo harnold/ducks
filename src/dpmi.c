@@ -52,9 +52,9 @@ static const char *dpmi_error_message(unsigned int error_code)
 static int dpmi_error(unsigned int error_code)
 {
     if (error_code < 0x8000)
-        return error(0, "DOS error: %i", error_code);
+        return error(0, "DOS function failed with error code %i", error_code);
     else
-        return error(0, "DPMI error: %s", dpmi_error_message(error_code));
+        return error(0, "DPMI function failed: %s", dpmi_error_message(error_code));
 }
 
 int dpmi_map_physical_address(uint32_t phys_addr, uint32_t size, uint32_t *lin_addr)

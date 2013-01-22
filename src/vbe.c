@@ -8,6 +8,9 @@
 
 #define VBE_INT         0x10
 
+#define vbe_error(...)  \
+    error(0, "VBE function failed: " __VA_ARGS__)
+
 PACKED_STRUCT vbe_info_block {
     uint32_t vbe_signature;
     uint16_t vbe_version;
@@ -86,7 +89,7 @@ int vbe_get_info(struct vbe_info *info)
 
 failure:
 
-    return error(0, "Obtaining VBE controller information failed");
+    return vbe_error("Could not obtain controller information");
 }
 
 void vbe_destroy_info(struct vbe_info *info)
@@ -130,7 +133,7 @@ int vbe_get_mode_info(unsigned int mode, struct vbe_mode_info *info)
 
 failure:
 
-    return error(0, "Obtaining VBE mode information failed");
+    return vbe_error("Could not obtain information for mode %Xh", mode);
 }
 
 int vbe_set_mode(unsigned int mode, unsigned int flags)
@@ -141,7 +144,7 @@ int vbe_set_mode(unsigned int mode, unsigned int flags)
     rmi.ebx = (mode | flags) & 0xC1FF;
 
     if (vbe_call_function(0x4F02, &rmi) != 0)
-        return error(0, "Setting VBE mode %Xh failed", mode);
+        return vbe_error("Could not set mode %Xh", mode);
 
     return 0;
 }
@@ -153,7 +156,7 @@ int vbe_get_mode(unsigned int *mode, unsigned int *flags)
     memset(&rmi, 0, sizeof(rmi));
 
     if (vbe_call_function(0x4F03, &rmi) != 0)
-        return error(0, "Getting VBE mode failed");
+        return vbe_error("Could not obtain current mode");
 
     *mode = rmi.ebx & 0x3FFF;
     *flags = rmi.ebx & 0xC000;
@@ -192,7 +195,7 @@ int vbe_save_state(unsigned int flags, uint32_t *handle)
 
 failure:
 
-    return error(0, "Saving VBE state failed");
+    return vbe_error("Could not save hardware state");
 }
 
 int vbe_restore_state(unsigned int flags, uint32_t handle)
@@ -205,7 +208,7 @@ int vbe_restore_state(unsigned int flags, uint32_t handle)
     rmi.es = (uint16_t) handle;
 
     if (vbe_call_function(0x4F04, &rmi) != 0)
-        return error(0, "Restoring VBE state failed");
+        return vbe_error("Could not restore saved hardware state");
 
     return 0;
 }
@@ -213,7 +216,7 @@ int vbe_restore_state(unsigned int flags, uint32_t handle)
 int vbe_free_state(uint32_t handle)
 {
     if (dpmi_free_dos_memory((uint16_t) handle) != 0)
-        return error(0, "Freeing VBE state failed");
+        return vbe_error("Could not free memory for saved state");
 
     return 0;
 }

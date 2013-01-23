@@ -18,8 +18,8 @@ enum vbe_mode_attributes {
     VBE_MA_COLOR_MODE                           = 1 << 3,
     VBE_MA_GRAPHICS_MODE                        = 1 << 4,
     VBE_MA_MODE_NOT_VGA_COMPATIBLE              = 1 << 5,
-    VBE_MA_WINDOWED_FRAME_BUFFER_NOT_SUPPORTED  = 1 << 6,
-    VBE_MA_LINEAR_FRAME_BUFFER_SUPPORTED        = 1 << 7,
+    VBE_MA_WINDOWED_FRAMEBUFFER_NOT_SUPPORTED   = 1 << 6,
+    VBE_MA_LINEAR_FRAMEBUFFER_SUPPORTED         = 1 << 7,
     VBE_MA_DOUBLE_SCAN_MODE_SUPPORTED           = 1 << 8,
     VBE_MA_INTERLACED_MODE_SUPPORTED            = 1 << 9,
     VBE_MA_TRIPLE_BUFFERING_SUPPORTED           = 1 << 10,
@@ -52,8 +52,8 @@ enum vbe_mode {
 };
 
 enum vbe_mode_flags {
-    VBE_MF_WINDOWED_FRAME_BUFFER        = 0,
-    VBE_MF_LINEAR_FRAME_BUFFER          = 1 << 14,
+    VBE_MF_WINDOWED_FRAMEBUFFER         = 0,
+    VBE_MF_LINEAR_FRAMEBUFFER           = 1 << 14,
     VBE_MF_CLEAR_DISPLAY_MEMORY         = 0,
     VBE_MF_PRESERVE_DISPLAY_MEMORY      = 1 << 15
 };

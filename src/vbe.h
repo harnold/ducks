@@ -1,6 +1,7 @@
 #ifndef VBE_H
 #define VBE_H
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdint.h>
 
@@ -134,5 +135,7 @@ int vbe_set_logical_scanline_length(enum vbe_scanline_length unit,
                                     unsigned int *bytes_per_scanline,
                                     unsigned int *pixels_per_scanline,
                                     unsigned int *max_scanlines);
+int vbe_get_display_start(int *pixel, int *scanline);
+int vbe_set_display_start(int pixel, int scanline, bool wait_for_retrace);
 
 #endif

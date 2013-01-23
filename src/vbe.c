@@ -288,3 +288,33 @@ int vbe_set_logical_scanline_length(enum vbe_scanline_length unit,
 
     return 0;
 }
+
+int vbe_get_display_start(int *pixel, int *scanline)
+{
+    struct dpmi_rm_info rmi;
+
+    memset(&rmi, 0, sizeof(rmi));
+    rmi.ebx = 0x01;
+
+    if (vbe_call_function(0x4F07, &rmi) != 0)
+        return vbe_error("Could not get display start");
+
+    *pixel = rmi.ecx;
+    *scanline = rmi.edx;
+    return 0;
+}
+
+int vbe_set_display_start(int pixel, int scanline, bool wait_for_retrace)
+{
+    struct dpmi_rm_info rmi;
+
+    memset(&rmi, 0, sizeof(rmi));
+    rmi.ebx = wait_for_retrace << 7;
+    rmi.ecx = pixel;
+    rmi.edx = scanline;
+
+    if (vbe_call_function(0x4F07, &rmi) != 0)
+        return vbe_error("Could not set display start");
+
+    return 0;
+}

@@ -318,3 +318,20 @@ int vbe_set_display_start(int pixel, int scanline, bool wait_for_retrace)
 
     return 0;
 }
+
+int vbe_set_palette(int start, int count, uint32_t data_rm_ptr, bool wait_for_retrace)
+{
+    struct dpmi_rm_info rmi;
+
+    memset(&rmi, 0, sizeof(rmi));
+    rmi.ebx = wait_for_retrace << 7;
+    rmi.ecx = count;
+    rmi.edx = start;
+    rmi.es = hword(data_rm_ptr);
+    rmi.edi = lword(data_rm_ptr);
+
+    if (vbe_call_function(0x4F09, &rmi) != 0)
+        return vbe_error("Could not set palette");
+
+    return 0;
+}

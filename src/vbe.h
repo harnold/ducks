@@ -118,6 +118,10 @@ struct vbe_mode_info {
     uint32_t phys_base_ptr;
 };
 
+PACKED_STRUCT vbe_palette_entry {
+    uint8_t blue, green, red, pad;
+};
+
 int vbe_get_info(struct vbe_info *info);
 void vbe_destroy_info(struct vbe_info *info);
 int vbe_get_mode_info(unsigned int mode, struct vbe_mode_info *mode_info);
@@ -137,5 +141,6 @@ int vbe_set_logical_scanline_length(enum vbe_scanline_length unit,
                                     unsigned int *max_scanlines);
 int vbe_get_display_start(int *pixel, int *scanline);
 int vbe_set_display_start(int pixel, int scanline, bool wait_for_retrace);
+int vbe_set_palette(int start, int count, uint32_t data_rm_ptr, bool wait_for_retrace);
 
 #endif

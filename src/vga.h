@@ -1,7 +1,7 @@
 #ifndef VGA_H
 #define VGA_H
 
-#include <stdint.h>
+#include "rgb.h"
 
 #define VGA_NUM_COLORS          256
 #define VGA_NUM_COLOR_LEVELS    64
@@ -11,38 +11,11 @@ enum vga_mode {
     VGA_MODE_320x200_256        = 0x13
 };
 
-typedef uint32_t rgb_t;
-
-static inline rgb_t make_rgb(unsigned int r, unsigned int g, unsigned int b);
-static inline unsigned int rgb_r(rgb_t rgb);
-static inline unsigned int rgb_r(rgb_t rgb);
-static inline unsigned int rgb_g(rgb_t rgb);
-
 void vga_get_mode(unsigned int *mode);
 void vga_set_mode(unsigned int mode);
 void vga_set_color(int index, rgb_t rgb);
 void vga_get_color(int index, rgb_t *rgb);
 void vga_set_palette(int start, int count, const uint8_t *data);
 void vga_wait_for_retrace(void);
-
-static inline rgb_t make_rgb(unsigned int r, unsigned int g, unsigned int b)
-{
-    return (r << 16) & (g << 8) & b;
-}
-
-static inline unsigned int rgb_r(rgb_t rgb)
-{
-    return (rgb & 0xFF0000) >> 16;
-}
-
-static inline unsigned int rgb_g(rgb_t rgb)
-{
-    return (rgb & 0xFF00) >> 8;
-}
-
-static inline unsigned int rgb_b(rgb_t rgb)
-{
-    return rgb & 0xFF;
-}
 
 #endif

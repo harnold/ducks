@@ -48,12 +48,12 @@ void vga_get_color(int index, rgb_t *rgb)
     *rgb = make_rgb(r, g, b);
 }
 
-void vga_set_palette(const struct vga_palette *pal)
+void vga_set_palette(int start, int count, const uint8_t *data)
 {
-    const uint8_t *p = pal->data;
+    const uint8_t *p = data;
 
-    outp(VGA_DAC_WRITE_ADDRESS, 0);
-    for (int i = 0; i < VGA_NUM_COLORS; i++) {
+    outp(VGA_DAC_WRITE_ADDRESS, start);
+    for (int i = 0; i < count; i++) {
         outp(VGA_DAC_DATA, *p++);
         outp(VGA_DAC_DATA, *p++);
         outp(VGA_DAC_DATA, *p++);

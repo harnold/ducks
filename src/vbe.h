@@ -118,10 +118,6 @@ struct vbe_mode_info {
     uint32_t phys_base_ptr;
 };
 
-PACKED_STRUCT vbe_palette_entry {
-    uint8_t blue, green, red, pad;
-};
-
 int vbe_get_info(struct vbe_info *info);
 void vbe_destroy_info(struct vbe_info *info);
 int vbe_get_mode_info(unsigned int mode, struct vbe_mode_info *mode_info);

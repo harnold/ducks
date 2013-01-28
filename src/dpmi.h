@@ -31,7 +31,7 @@ static inline void *dpmi_ptr_to_rm_segment(uint16_t rm_seg)
 
 static inline void *dpmi_ptr_to_rm_address(uint32_t rm_addr)
 {
-    return (void *) (((rm_addr & 0xFFFF0000) >> 12) | (rm_addr & 0xFFFF));
+    return (void *) (((rm_addr & 0xFFFF0000) >> 12) + (rm_addr & 0xFFFF));
 }
 
 #endif

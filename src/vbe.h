@@ -137,6 +137,7 @@ int vbe_set_logical_scanline_length(enum vbe_scanline_length unit,
                                     unsigned int *max_scanlines);
 int vbe_get_display_start(int *pixel, int *scanline);
 int vbe_set_display_start(int pixel, int scanline, bool wait_for_retrace);
-int vbe_set_palette(int start, int count, uint32_t data_rm_ptr, bool wait_for_retrace);
+int vbe_set_palette_data(int start, int count, uint32_t data_rm_ptr,
+                         bool wait_for_retrace);
 
 #endif

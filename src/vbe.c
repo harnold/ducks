@@ -319,7 +319,8 @@ int vbe_set_display_start(int pixel, int scanline, bool wait_for_retrace)
     return 0;
 }
 
-int vbe_set_palette(int start, int count, uint32_t data_rm_ptr, bool wait_for_retrace)
+int vbe_set_palette_data(int start, int count, uint32_t data_rm_ptr,
+                         bool wait_for_retrace)
 {
     struct dpmi_rm_info rmi;
 

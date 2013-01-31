@@ -156,8 +156,8 @@ int dpmi_lock_linear_region(uint32_t lin_addr, uint32_t size)
     regs.w.ax = 0x600;
     regs.w.bx = hword(lin_addr);
     regs.w.cx = lword(lin_addr);
-    regs.w.si = hword(lin_addr);
-    regs.w.di = lword(lin_addr);
+    regs.w.si = hword(size);
+    regs.w.di = lword(size);
     int386(DPMI_INT, &regs, &regs);
 
     if (regs.x.cflag != 0)
@@ -171,11 +171,11 @@ int dpmi_unlock_linear_region(uint32_t lin_addr, uint32_t size)
     union REGS regs;
 
     memset(&regs, 0, sizeof(regs));
-    regs.w.ax = 0x600;
+    regs.w.ax = 0x601;
     regs.w.bx = hword(lin_addr);
     regs.w.cx = lword(lin_addr);
-    regs.w.si = hword(lin_addr);
-    regs.w.di = lword(lin_addr);
+    regs.w.si = hword(size);
+    regs.w.di = lword(size);
     int386(DPMI_INT, &regs, &regs);
 
     if (regs.x.cflag != 0)

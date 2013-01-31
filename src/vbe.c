@@ -9,9 +9,6 @@
 
 #define VBE_INT         0x10
 
-#define vbe_error(...)  \
-    error(0, "VBE function failed: " __VA_ARGS__)
-
 PACKED_STRUCT vbe_info_block {
     uint32_t vbe_signature;
     uint16_t vbe_version;
@@ -31,13 +28,15 @@ PACKED_STRUCT vbe_mode_info_block {
     uint8_t _data[256];
 };
 
-inline static int vbe_call_function(unsigned int fn, struct dpmi_rm_info *rmi)
+static inline int vbe_call_function(unsigned int fn, struct dpmi_rm_info *rmi)
 {
     rmi->eax = fn;
 
-    if (dpmi_simulate_rm_interrupt(VBE_INT, rmi) != 0 ||
-        (rmi->eax & 0xFF00) != 0)
+    if (dpmi_simulate_rm_interrupt(VBE_INT, rmi) != 0)
         return -1;
+
+    if ((rmi->eax & 0xFF00) != 0)
+        return error(0, "VBE function %02Xh failed", fn);
 
     return 0;
 }
@@ -49,7 +48,7 @@ int vbe_get_info(struct vbe_info *info)
     struct vbe_info_block *ib;
 
     if (dpmi_allocate_dos_memory(sizeof(*ib), &rm_seg, &rm_sel) != 0)
-        goto failure;
+        return -1;
 
     ib = dpmi_ptr_to_rm_segment(rm_seg);
     memset(ib, 0, sizeof(*ib));
@@ -60,7 +59,7 @@ int vbe_get_info(struct vbe_info *info)
 
     if (vbe_call_function(0x4F00, &rmi) != 0) {
         dpmi_free_dos_memory(rm_sel);
-        goto failure;
+        return -1;
     }
 
     uint32_t *sig = (uint32_t *) info->vbe_signature;
@@ -83,14 +82,10 @@ int vbe_get_info(struct vbe_info *info)
 
     if (dpmi_free_dos_memory(rm_sel)) {
         vbe_destroy_info(info);
-        goto failure;
+        return -1;
     }
 
     return 0;
-
-failure:
-
-    return vbe_error("Could not obtain controller information");
 }
 
 void vbe_destroy_info(struct vbe_info *info)
@@ -108,7 +103,7 @@ int vbe_get_mode_info(unsigned int mode, struct vbe_mode_info *info)
     struct vbe_mode_info_block *ib;
 
     if (dpmi_allocate_dos_memory(sizeof(*ib), &rm_seg, &rm_sel) != 0)
-        goto failure;
+        return -1;
 
     ib = dpmi_ptr_to_rm_segment(rm_seg);
     memset(ib, 0, sizeof(*ib));
@@ -119,7 +114,7 @@ int vbe_get_mode_info(unsigned int mode, struct vbe_mode_info *info)
 
     if (vbe_call_function(0x4F01, &rmi) != 0) {
         dpmi_free_dos_memory(rm_sel);
-        goto failure;
+        return -1;
     }
 
     static_assert(offsetof(struct vbe_mode_info, phys_base_ptr) == 40,
@@ -128,13 +123,9 @@ int vbe_get_mode_info(unsigned int mode, struct vbe_mode_info *info)
     memcpy(info, ib, sizeof(*info));
 
     if (dpmi_free_dos_memory(rm_sel))
-        goto failure;
+        return -1;
 
     return 0;
-
-failure:
-
-    return vbe_error("Could not obtain information for mode %Xh", mode);
 }
 
 int vbe_set_mode(unsigned int mode, unsigned int flags)
@@ -144,10 +135,7 @@ int vbe_set_mode(unsigned int mode, unsigned int flags)
     memset(&rmi, 0, sizeof(rmi));
     rmi.ebx = (mode | flags) & 0xC1FF;
 
-    if (vbe_call_function(0x4F02, &rmi) != 0)
-        return vbe_error("Could not set mode %Xh", mode);
-
-    return 0;
+    return vbe_call_function(0x4F02, &rmi);
 }
 
 int vbe_get_mode(unsigned int *mode, unsigned int *flags)
@@ -157,7 +145,7 @@ int vbe_get_mode(unsigned int *mode, unsigned int *flags)
     memset(&rmi, 0, sizeof(rmi));
 
     if (vbe_call_function(0x4F03, &rmi) != 0)
-        return vbe_error("Could not obtain current mode");
+        return -1;
 
     *mode = rmi.ebx & 0x3FFF;
     *flags = rmi.ebx & 0xC000;
@@ -173,13 +161,13 @@ int vbe_save_state(unsigned int flags, uint32_t *handle)
     rmi.ecx = flags & 0x0F;
 
     if (vbe_call_function(0x4F04, &rmi) != 0)
-        goto failure;
+        return -1;
 
     uint16_t rm_seg, rm_sel;
     uint32_t rm_size = rmi.ebx << 6;
 
     if (dpmi_allocate_dos_memory(rm_size, &rm_seg, &rm_sel) != 0)
-        goto failure;
+        return -1;
 
     memset(&rmi, 0, sizeof(rmi));
     rmi.edx = 0x01;
@@ -188,15 +176,11 @@ int vbe_save_state(unsigned int flags, uint32_t *handle)
 
     if (vbe_call_function(0x4F04, &rmi) != 0) {
         dpmi_free_dos_memory(rm_sel);
-        goto failure;
+        return -1;
     }
 
     *handle = rm_sel;
     return 0;
-
-failure:
-
-    return vbe_error("Could not save hardware state");
 }
 
 int vbe_restore_state(unsigned int flags, uint32_t handle)
@@ -208,18 +192,12 @@ int vbe_restore_state(unsigned int flags, uint32_t handle)
     rmi.ecx = flags & 0x0F;
     rmi.es = (uint16_t) handle;
 
-    if (vbe_call_function(0x4F04, &rmi) != 0)
-        return vbe_error("Could not restore saved hardware state");
-
-    return 0;
+    return vbe_call_function(0x4F04, &rmi);
 }
 
 int vbe_free_state(uint32_t handle)
 {
-    if (dpmi_free_dos_memory((uint16_t) handle) != 0)
-        return vbe_error("Could not free memory for saved state");
-
-    return 0;
+    return dpmi_free_dos_memory((uint16_t) handle);
 }
 
 int vbe_get_logical_scanline_length(unsigned int *bytes_per_scanline,
@@ -231,8 +209,7 @@ int vbe_get_logical_scanline_length(unsigned int *bytes_per_scanline,
     rmi.ebx = 0x01;
 
     if (vbe_call_function(0x4F06, &rmi) != 0)
-        return vbe_error("Could not get logical scanline length");
-
+        return -1;
 
     if (bytes_per_scanline != NULL)
         *bytes_per_scanline = rmi.ebx;
@@ -251,7 +228,7 @@ int vbe_get_maximum_scanline_length(unsigned int *bytes_per_scanline,
     rmi.ebx = 0x03;
 
     if (vbe_call_function(0x4F06, &rmi) != 0)
-        return vbe_error("Could not get maximum scanline length");
+        return -1;
 
     if (bytes_per_scanline != NULL)
         *bytes_per_scanline = rmi.ebx;
@@ -277,7 +254,7 @@ int vbe_set_logical_scanline_length(enum vbe_scanline_length unit,
     rmi.ecx = length & 0xFFFF;
 
     if (vbe_call_function(0x4F06, &rmi) != 0)
-        return vbe_error("Could not set logical scanline length");
+        return -1;
 
     if (bytes_per_scanline != NULL)
         *bytes_per_scanline = rmi.ebx;
@@ -297,7 +274,7 @@ int vbe_get_display_start(int *pixel, int *scanline)
     rmi.ebx = 0x01;
 
     if (vbe_call_function(0x4F07, &rmi) != 0)
-        return vbe_error("Could not get display start");
+        return -1;
 
     *pixel = rmi.ecx;
     *scanline = rmi.edx;
@@ -313,10 +290,7 @@ int vbe_set_display_start(int pixel, int scanline, bool wait_for_retrace)
     rmi.ecx = pixel;
     rmi.edx = scanline;
 
-    if (vbe_call_function(0x4F07, &rmi) != 0)
-        return vbe_error("Could not set display start");
-
-    return 0;
+    return vbe_call_function(0x4F07, &rmi);
 }
 
 int vbe_set_palette_data(int start, int count, uint32_t data_rm_ptr,
@@ -331,8 +305,5 @@ int vbe_set_palette_data(int start, int count, uint32_t data_rm_ptr,
     rmi.es = hword(data_rm_ptr);
     rmi.edi = lword(data_rm_ptr);
 
-    if (vbe_call_function(0x4F09, &rmi) != 0)
-        return vbe_error("Could not set palette");
-
-    return 0;
+    return vbe_call_function(0x4F09, &rmi);
 }

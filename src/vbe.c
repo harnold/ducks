@@ -80,7 +80,7 @@ int vbe_get_info(struct vbe_info *info)
     info->oem_product_rev =
         strdup((char *) dpmi_ptr_to_rm_address(ib->oem_product_rev_ptr));
 
-    if (dpmi_free_dos_memory(rm_sel)) {
+    if (dpmi_free_dos_memory(rm_sel) != 0) {
         vbe_destroy_info(info);
         return -1;
     }
@@ -122,7 +122,7 @@ int vbe_get_mode_info(unsigned int mode, struct vbe_mode_info *info)
 
     memcpy(info, ib, sizeof(*info));
 
-    if (dpmi_free_dos_memory(rm_sel))
+    if (dpmi_free_dos_memory(rm_sel) != 0)
         return -1;
 
     return 0;

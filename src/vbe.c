@@ -68,9 +68,7 @@ int vbe_get_info(struct vbe_info *info)
         return -1;
     }
 
-    uint32_t *sig = (uint32_t *) info->vbe_signature;
-    *sig = ib->vbe_signature;
-
+    info->vbe_signature = ib->vbe_signature;
     info->vbe_version = ib->vbe_version;
     info->capabilities = ib->capabilities;
     info->video_modes = dpmi_ptr_to_rm_address(ib->video_mode_ptr);

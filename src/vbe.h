@@ -73,7 +73,7 @@ enum vbe_scanline_length {
 };
 
 struct vbe_info {
-    char vbe_signature[4];
+    uint32_t vbe_signature;
     uint16_t vbe_version;
     char *oem_string;
     uint32_t capabilities;

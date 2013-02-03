@@ -71,23 +71,39 @@ int vbe_get_info(struct vbe_info *info)
     info->vbe_signature = ib->vbe_signature;
     info->vbe_version = ib->vbe_version;
     info->capabilities = ib->capabilities;
-    info->video_modes = dpmi_ptr_to_rm_address(ib->video_mode_ptr);
     info->total_memory = ib->total_memory;
     info->oem_software_rev = ib->oem_software_rev;
 
-    info->oem_string =
-        strdup((char *) dpmi_ptr_to_rm_address(ib->oem_string_ptr));
-    info->oem_vendor_name =
-        strdup((char *) dpmi_ptr_to_rm_address(ib->oem_vendor_name_ptr));
-    info->oem_product_name =
-        strdup((char *) dpmi_ptr_to_rm_address(ib->oem_product_name_ptr));
-    info->oem_product_rev =
-        strdup((char *) dpmi_ptr_to_rm_address(ib->oem_product_rev_ptr));
+    /* Copy video mode info to reserved area. */
 
-    if (dpmi_free_dos_memory(rm_sel) != 0) {
-        vbe_destroy_info(info);
+    uint16_t *p = dpmi_ptr_to_rm_address(ib->video_mode_ptr);
+    uint16_t *q = (uint16_t *) info->reserved;
+
+    while (*p != 0xFFFF)
+        *q++ = *p++;
+
+    *q = *p;
+
+    info->video_modes = (uint16_t *) info->reserved;
+
+    /* Copy OEM strings to OEM data area. */
+
+    char *s = info->oem_data;
+
+    info->oem_string = s;
+    s = stpcpy(s, (char *) dpmi_ptr_to_rm_address(ib->oem_string_ptr)) + 1;
+
+    info->oem_vendor_name = s;
+    s = stpcpy(s, (char *) dpmi_ptr_to_rm_address(ib->oem_vendor_name_ptr)) + 1;
+
+    info->oem_product_name = s;
+    s = stpcpy(s, (char *) dpmi_ptr_to_rm_address(ib->oem_product_name_ptr)) + 1;
+
+    info->oem_product_rev = s;
+    stpcpy(s, (char *) dpmi_ptr_to_rm_address(ib->oem_product_rev_ptr)) + 1;
+
+    if (dpmi_free_dos_memory(rm_sel) != 0)
         return -1;
-    }
 
     return 0;
 }

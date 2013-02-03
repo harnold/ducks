@@ -83,6 +83,8 @@ struct vbe_info {
     char *oem_vendor_name;
     char *oem_product_name;
     char *oem_product_rev;
+    uint8_t reserved[222];
+    uint8_t oem_data[256];
 };
 
 struct vbe_mode_info {

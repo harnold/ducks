@@ -7,7 +7,10 @@
 #include "error.h"
 #include "vbe.h"
 
-#define VBE_INT         0x10
+#define VBE_INT                         0x10
+
+#define VBE_INFO_BLOCK_SIZE             512
+#define VBE_MODE_INFO_BLOCK_SIZE        256
 
 PACKED_STRUCT vbe_info_block {
     uint32_t vbe_signature;
@@ -25,7 +28,7 @@ PACKED_STRUCT vbe_info_block {
 };
 
 PACKED_STRUCT vbe_mode_info_block {
-    uint8_t _data[256];
+    uint8_t data[VBE_MODE_INFO_BLOCK_SIZE];
 };
 
 static inline int vbe_call_function(unsigned int fn, struct dpmi_rm_info *rmi)
@@ -43,6 +46,9 @@ static inline int vbe_call_function(unsigned int fn, struct dpmi_rm_info *rmi)
 
 int vbe_get_info(struct vbe_info *info)
 {
+    static_assert(sizeof(struct vbe_info_block) == VBE_INFO_BLOCK_SIZE,
+                  "Packed structure has wrong size");
+
     struct dpmi_rm_info rmi;
     uint16_t rm_seg, rm_sel;
     struct vbe_info_block *ib;
@@ -98,6 +104,12 @@ void vbe_destroy_info(struct vbe_info *info)
 
 int vbe_get_mode_info(unsigned int mode, struct vbe_mode_info *info)
 {
+    static_assert(sizeof(struct vbe_mode_info_block) == VBE_MODE_INFO_BLOCK_SIZE,
+                  "Packed structure has wrong size");
+
+    static_assert(offsetof(struct vbe_mode_info, phys_base_ptr) == 40,
+                  "Wrong alignment of structure members");
+
     struct dpmi_rm_info rmi;
     uint16_t rm_seg, rm_sel;
     struct vbe_mode_info_block *ib;
@@ -116,9 +128,6 @@ int vbe_get_mode_info(unsigned int mode, struct vbe_mode_info *info)
         dpmi_free_dos_memory(rm_sel);
         return -1;
     }
-
-    static_assert(offsetof(struct vbe_mode_info, phys_base_ptr) == 40,
-                  "Wrong alignment of structure members");
 
     memcpy(info, ib, sizeof(*info));
 

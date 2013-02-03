@@ -108,14 +108,6 @@ int vbe_get_info(struct vbe_info *info)
     return 0;
 }
 
-void vbe_destroy_info(struct vbe_info *info)
-{
-    free(info->oem_string);
-    free(info->oem_vendor_name);
-    free(info->oem_product_name);
-    free(info->oem_product_rev);
-}
-
 int vbe_get_mode_info(unsigned int mode, struct vbe_mode_info *info)
 {
     static_assert(sizeof(struct vbe_mode_info_block) == VBE_MODE_INFO_BLOCK_SIZE,

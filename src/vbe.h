@@ -121,7 +121,6 @@ struct vbe_mode_info {
 };
 
 int vbe_get_info(struct vbe_info *info);
-void vbe_destroy_info(struct vbe_info *info);
 int vbe_get_mode_info(unsigned int mode, struct vbe_mode_info *mode_info);
 int vbe_set_mode(unsigned int mode, unsigned int flags);
 int vbe_get_mode(unsigned int *mode, unsigned int *flags);

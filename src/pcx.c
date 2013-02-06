@@ -74,6 +74,7 @@ failure:
 int pcx_load_image(const char *path, struct image *image)
 {
     FILE *file;
+    uint8_t *data = NULL;
 
     if (!(file = fopen(path, "rb"))) {
         error_errno("Opening file '%s' failed", path);
@@ -91,7 +92,8 @@ int pcx_load_image(const char *path, struct image *image)
     int height = read_le16(header + PCX_Y2) - read_le16(header + PCX_Y2);
     int size = width * height;
 
-    uint8_t *data = xmalloc(size);
+    data = xmalloc(size);
+
     uint8_t *p = data;
     int pixel, count;
 
@@ -125,6 +127,7 @@ failure:
 
     if (file)
         fclose(file);
-    free(data);
+    if (data)
+        free(data);
     return -1;
 }

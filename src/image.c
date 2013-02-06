@@ -45,7 +45,7 @@ int load_palette(const char *path, struct palette *palette)
         return -1;
     }
 
-    if (strncmp(ext, ".pcx", 4) == 0) {
+    if (strcmp(ext, ".pcx") == 0) {
         return pcx_load_palette(path, palette);
     } else {
         error("File '%s' has no known image or palette file format", path);
@@ -62,7 +62,7 @@ int load_image(const char *path, struct image *image)
         return -1;
     }
 
-    if (strncmp(ext, ".pcx", 4) == 0) {
+    if (strcmp(ext, ".pcx") == 0) {
         return pcx_load_image(path, image);
     } else {
         error("File '%s' has no known image file format", path);

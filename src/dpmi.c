@@ -52,10 +52,10 @@ static const char *dpmi_error_message(unsigned int error_code)
 static int dpmi_error(unsigned int fn, unsigned int error_code)
 {
     if (error_code < 0x8000) {
-        return error(0, "DPMI function %04Xh failed: DOS error code %u",
+        return error("DPMI function %04Xh failed: DOS error code %u",
                      fn, error_code);
     } else {
-        return error(0, "DPMI function %04Xh failed: %s",
+        return error("DPMI function %04Xh failed: %s",
                      fn, dpmi_error_message(error_code));
     }
 }
@@ -104,8 +104,8 @@ int dpmi_allocate_dos_memory(uint32_t size, uint16_t *segment, uint16_t *selecto
     union REGS regs;
 
     if (size > 0xFFFF0) {
-        return error(0, "Cannot allocate DOS memory block larger than %u bytes "
-                        "(%u bytes requested)", 0xFFFF0, size);
+        return error("Cannot allocate DOS memory block larger than %u bytes "
+                     "(%u bytes requested)", 0xFFFF0, size);
     }
 
     memset(&regs, 0, sizeof(regs));

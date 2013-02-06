@@ -39,7 +39,7 @@ static inline int vbe_call_function(unsigned int fn, struct dpmi_rm_info *rmi)
         return -1;
 
     if ((rmi->eax & 0xFF00) != 0)
-        return error(0, "VBE function %02Xh failed", fn);
+        return error("VBE function %02Xh failed", fn);
 
     return 0;
 }

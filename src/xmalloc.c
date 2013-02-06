@@ -11,10 +11,8 @@ void *xmalloc(size_t size)
 
     void *ptr = malloc(size);
 
-    if (!ptr) {
-        error_exit(
-            errno, "Out of memory?  malloc failed to allocate %ul bytes", size);
-    }
+    if (!ptr)
+        fatal_errno("Out of memory?  malloc() failed to allocate %ul bytes", size);
 
     return ptr;
 }

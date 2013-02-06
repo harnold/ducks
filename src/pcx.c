@@ -40,17 +40,17 @@ int pcx_load_palette(const char *path, struct palette *palette)
     FILE *file;
 
     if (!(file = fopen(path, "rb"))) {
-        error(errno, "Opening file '%s' failed", path);
+        error_errno("Opening file '%s' failed", path);
         goto failure;
     }
 
     if (fseek(file, -PCX_PALETTE_SIZE, SEEK_END) != 0) {
-        error(errno, "Seeking in file '%s' failed", path);
+        error_errno("Seeking in file '%s' failed", path);
         goto failure;
     }
 
     if (fread(palette->data, PCX_PALETTE_SIZE, 1, file) != 1) {
-        error(errno, "Reading palette from file '%s' failed", path);
+        error_errno("Reading palette from file '%s' failed", path);
         goto failure;
     }
 
@@ -76,14 +76,14 @@ int pcx_load_image(const char *path, struct image *image)
     FILE *file;
 
     if (!(file = fopen(path, "rb"))) {
-        error(errno, "Opening file '%s' failed", path);
+        error_errno("Opening file '%s' failed", path);
         goto failure;
     }
 
     uint8_t header[PCX_HEADER_SIZE];
 
     if (fread(header, PCX_HEADER_SIZE, 1, file) != 1) {
-        error(errno, "Reading PCX header from file '%s' failed", path);
+        error_errno("Reading PCX header from file '%s' failed", path);
         goto failure;
     }
 
@@ -97,7 +97,7 @@ int pcx_load_image(const char *path, struct image *image)
 
     for (int i = 0; i < size; ) {
         if ((pixel = fgetc(file)) == EOF) {
-            error(errno, "Reading image data from file '%s' failed", path);
+            error_errno("Reading image data from file '%s' failed", path);
             goto failure;
         }
         if (pixel < 192) {
@@ -106,7 +106,7 @@ int pcx_load_image(const char *path, struct image *image)
         } else {
             count = pixel - 192;
             if ((pixel = fgetc(file)) == EOF) {
-                error(errno, "Reading image data from file '%s' failed", path);
+                error_errno("Reading image data from file '%s' failed", path);
                 goto failure;
             }
             while (count-- > 0) {

@@ -15,7 +15,7 @@ int mouse_init(void)
     int386(MOUSE_INT, &regs, &regs);
 
     if (regs.w.ax != 0xFFFF)
-        return error(0, "No mouse driver found");
+        return error("No mouse driver found");
 
     return 0;
 }

@@ -1,8 +1,10 @@
 #ifndef ERROR_H
 #define ERROR_H
 
-void warning(int errnum, const char *format, ...);
-int error(int errnum, const char *format, ...);
-void error_exit(int errnum, const char *format, ...);
+void warning(const char *format, ...);
+int error(const char *format, ...);
+int error_errno(const char *format, ...);
+void fatal(const char *format, ...);
+void fatal_errno(const char *format, ...);
 
 #endif

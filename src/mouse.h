@@ -10,8 +10,8 @@ enum mouse_buttons {
 
 int mouse_init(void);
 void mouse_exit(void);
-void mouse_get_status(enum mouse_buttons *buttons, int *dx, int *dy);
-void mouse_get_buttons(enum mouse_buttons *buttons);
+void mouse_get_status(unsigned int *buttons, int *dx, int *dy);
+void mouse_get_buttons(unsigned int *buttons);
 void mouse_get_delta(int *dx, int *dy);
 
 #endif

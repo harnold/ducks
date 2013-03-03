@@ -13,8 +13,8 @@ enum vga_mode {
 
 struct palette;
 
-void vga_get_mode(unsigned int *mode);
-void vga_set_mode(unsigned int mode);
+void vga_get_mode(int *mode);
+void vga_set_mode(int mode);
 void vga_set_color(int index, rgb_t rgb);
 void vga_get_color(int index, rgb_t *rgb);
 void vga_set_palette_data(int start, int count, const uint8_t *data);

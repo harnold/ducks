@@ -41,9 +41,9 @@ static_assert(sizeof(struct vbe_mode_info_block) == VBE_MODE_INFO_BLOCK_SIZE,
 static_assert(offsetof(struct vbe_mode_info, phys_base_ptr) == 40,
               "Wrong alignment of structure members");
 
-static inline int vbe_call_function(unsigned int fn, struct dpmi_rm_info *rmi)
+static inline int vbe_call_function(int fn, struct dpmi_rm_info *rmi)
 {
-    rmi->eax = fn;
+    rmi->eax = (uint32_t) fn;
 
     if (dpmi_simulate_rm_interrupt(VBE_INT, rmi) != 0)
         return -1;
@@ -115,7 +115,7 @@ int vbe_get_info(struct vbe_info *info)
     return 0;
 }
 
-int vbe_get_mode_info(unsigned int mode, struct vbe_mode_info *info)
+int vbe_get_mode_info(int mode, struct vbe_mode_info *info)
 {
     struct dpmi_rm_info rmi;
     uint16_t rm_seg, rm_sel;
@@ -128,7 +128,7 @@ int vbe_get_mode_info(unsigned int mode, struct vbe_mode_info *info)
     memset(ib, 0, sizeof(*ib));
 
     memset(&rmi, 0, sizeof(rmi));
-    rmi.ecx = mode;
+    rmi.ecx = (uint32_t) mode;
     rmi.es = rm_seg;
 
     if (vbe_call_function(0x4F01, &rmi) != 0) {
@@ -144,17 +144,17 @@ int vbe_get_mode_info(unsigned int mode, struct vbe_mode_info *info)
     return 0;
 }
 
-int vbe_set_mode(unsigned int mode, unsigned int flags)
+int vbe_set_mode(int mode, unsigned int flags)
 {
     struct dpmi_rm_info rmi;
 
     memset(&rmi, 0, sizeof(rmi));
-    rmi.ebx = (mode | flags) & 0xC1FF;
+    rmi.ebx = ((uint32_t) mode | flags) & 0xC1FF;
 
     return vbe_call_function(0x4F02, &rmi);
 }
 
-int vbe_get_mode(unsigned int *mode, unsigned int *flags)
+int vbe_get_mode(int *mode, unsigned int *flags)
 {
     struct dpmi_rm_info rmi;
 

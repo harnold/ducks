@@ -120,9 +120,9 @@ struct vbe_mode_info {
 };
 
 int vbe_get_info(struct vbe_info *info);
-int vbe_get_mode_info(unsigned int mode, struct vbe_mode_info *mode_info);
-int vbe_set_mode(unsigned int mode, unsigned int flags);
-int vbe_get_mode(unsigned int *mode, unsigned int *flags);
+int vbe_get_mode_info(int mode, struct vbe_mode_info *mode_info);
+int vbe_set_mode(int mode, unsigned int flags);
+int vbe_get_mode(int *mode, unsigned int *flags);
 int vbe_save_state(unsigned int flags, uint32_t *handle);
 int vbe_restore_state(unsigned int flags, uint32_t handle);
 int vbe_free_state(uint32_t handle);

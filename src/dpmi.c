@@ -35,7 +35,7 @@ static const struct dpmi_error dpmi_error_table[] = {
     0x8026, "Invalid request"
 };
 
-static const char *dpmi_error_message(unsigned int error_code)
+static const char *dpmi_error_message(int error_code)
 {
     const struct dpmi_error *e = &dpmi_error_table;
     const struct dpmi_error *end = e + array_length(dpmi_error_table);
@@ -49,10 +49,10 @@ static const char *dpmi_error_message(unsigned int error_code)
     return "Unknown error";
 }
 
-static int dpmi_error(unsigned int fn, unsigned int error_code)
+static int dpmi_error(int fn, int error_code)
 {
     if (error_code < 0x8000) {
-        return error("DPMI function %04Xh failed: DOS error code %u",
+        return error("DPMI function %04Xh failed: DOS error code %d",
                      fn, error_code);
     } else {
         return error("DPMI function %04Xh failed: %s",
@@ -60,9 +60,9 @@ static int dpmi_error(unsigned int fn, unsigned int error_code)
     }
 }
 
-static inline int dpmi_call_function(unsigned int fn, union REGS *regs)
+static inline int dpmi_call_function(int fn, union REGS *regs)
 {
-    regs->w.ax = fn;
+    regs->w.ax = (uint16_t) fn;
     int386(DPMI_INT, regs, regs);
 
     if (regs->x.cflag != 0)
@@ -129,7 +129,7 @@ int dpmi_free_dos_memory(uint16_t selector)
     return dpmi_call_function(0x0101, &regs);
 }
 
-int dpmi_simulate_rm_interrupt(unsigned int inum, struct dpmi_rm_info *info)
+int dpmi_simulate_rm_interrupt(int inum, struct dpmi_rm_info *info)
 {
     union REGS regs;
     struct SREGS sregs;

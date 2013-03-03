@@ -1,24 +1,10 @@
 #include <stddef.h>
-#include <stdlib.h>
 #include <string.h>
 
 #include "error.h"
 #include "image.h"
 #include "pcx.h"
 #include "xmalloc.h"
-
-struct image *create_image(int width, int height)
-{
-    struct image *image = xmalloc(sizeof(struct image));
-    init_image(image, width, height, NULL);
-    return image;
-}
-
-void delete_image(struct image *image)
-{
-    destroy_image(image);
-    free(image);
-}
 
 void init_image(struct image *image, int width, int height, uint8_t *data)
 {

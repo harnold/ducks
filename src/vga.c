@@ -2,6 +2,7 @@
 #include <i86.h>
 #include <string.h>
 
+#include "palette.h"
 #include "vga.h"
 
 #define VGA_INT                 0x10

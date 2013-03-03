@@ -3,10 +3,6 @@
 
 #include <stdint.h>
 
-struct palette {
-    uint8_t data[256];
-};
-
 typedef uint32_t rgb_t;
 
 static inline rgb_t make_rgb(unsigned int r, unsigned int g, unsigned int b)

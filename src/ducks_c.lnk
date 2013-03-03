@@ -1,5 +1,5 @@
 system  dos32x
 option  map
 name    ducks.exe
-file    dpmi.obj, error.obj, image.obj, main.obj, mouse.obj, pcx.obj
-file    timer.obj, vbe.obj, vga.obj, xmalloc.obj, xmemcpy.obj
+file    dpmi.obj, error.obj, image.obj, main.obj, mouse.obj, palette.obj
+file    pcx.obj, timer.obj, vbe.obj, vga.obj, xmalloc.obj, xmemcpy.obj

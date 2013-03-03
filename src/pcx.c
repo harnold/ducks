@@ -6,6 +6,7 @@
 
 #include "error.h"
 #include "image.h"
+#include "palette.h"
 #include "pcx.h"
 #include "rgb.h"
 #include "xmalloc.h"

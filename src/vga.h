@@ -11,6 +11,8 @@ enum vga_mode {
     VGA_MODE_320x200_256        = 0x13
 };
 
+struct palette;
+
 void vga_get_mode(unsigned int *mode);
 void vga_set_mode(unsigned int mode);
 void vga_set_color(int index, rgb_t rgb);

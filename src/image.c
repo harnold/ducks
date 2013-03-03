@@ -36,23 +36,6 @@ void destroy_image(struct image *image)
     free(image->data);
 }
 
-int load_palette(const char *path, struct palette *palette)
-{
-    const char *ext = strrchr(path, '.');
-
-    if (!ext) {
-        error("File '%s' has no known image or palette file format", path);
-        return -1;
-    }
-
-    if (strcmp(ext, ".pcx") == 0) {
-        return pcx_load_palette(path, palette);
-    } else {
-        error("File '%s' has no known image or palette file format", path);
-        return -1;
-    }
-}
-
 int load_image(const char *path, struct image *image)
 {
     const char *ext = strrchr(path, '.');

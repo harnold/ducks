@@ -10,7 +10,7 @@
 #define aligned_ptr(p) \
     ((uint32_t *) ((uintptr_t) (p) & ~3))
 
-void xmemcpy(void *dst, const void *src, size_t n)
+void *xmemcpy(void *dst, const void *src, size_t n)
 {
     const uint8_t *ep = (uint8_t *) src + n;
     const uint8_t *sp = (uint8_t *) src;
@@ -39,9 +39,11 @@ void xmemcpy(void *dst, const void *src, size_t n)
         while (sp < ep)
             *dp++ = *sp++;
     }
+
+    return dst;
 }
 
-void xmemmove(void *dst, const void *src, size_t n)
+void *xmemmove(void *dst, const void *src, size_t n)
 {
     if (src < dst) {
 
@@ -107,9 +109,11 @@ void xmemmove(void *dst, const void *src, size_t n)
                 *dp++ = *sp++;
         }
     }
+
+    return dst;
 }
 
-void xmemset(void *ptr, int c, size_t n)
+void *xmemset(void *ptr, int c, size_t n)
 {
     uint8_t b = (uint8_t) c;
     uint8_t *ep = (uint8_t *) ptr + n;
@@ -140,4 +144,6 @@ void xmemset(void *ptr, int c, size_t n)
         while (p < ep)
             *p++ = b;
     }
+
+    return ptr;
 }

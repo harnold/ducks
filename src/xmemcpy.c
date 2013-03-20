@@ -46,69 +46,67 @@ byte_copy:
 
 void *xmemmove(void *dst, const void *src, size_t n)
 {
-    if (src < dst) {
+    if (src >= dst) {
 
-        const uint8_t *ep = (uint8_t *) src;
-        const uint8_t *sp = (uint8_t *) src + n;
-        uint8_t *dp = (uint8_t *) dst + n;
-
-        if (n < DWORD_COPY_THRESHOLD || alignment(src) != alignment(dst)) {
-
-            do
-                *(--dp) = *(--sp);
-            while (sp > ep);
-
-        } else {
-
-            const uint32_t *dw_ep = aligned_ptr(ep + 3);
-            const uint32_t *dw_sp = aligned_ptr(sp);
-            uint32_t *dw_dp = aligned_ptr(dp);
-
-            do
-                *(--dp) = *(--sp);
-            while (sp > (uint8_t *) dw_sp);
-
-            do
-                *(--dw_dp) = *(--dw_sp);
-            while (dw_sp > dw_ep);
-
-            sp = (uint8_t *) dw_sp;
-            dp = (uint8_t *) dw_dp;
-
-            do
-                *(--dp) = *(--sp);
-            while (sp > ep);
-        }
-
-    } else {
-
-        const uint8_t *ep = (uint8_t *) src + n;
         const uint8_t *sp = (uint8_t *) src;
         uint8_t *dp = (uint8_t *) dst;
 
-        if (n < DWORD_COPY_THRESHOLD || alignment(src) != alignment(dst)) {
+        if (n < DWORD_COPY_THRESHOLD || alignment(sp) != alignment(dp))
+            goto forward_byte_copy;
 
-            while (sp < ep)
-                *dp++ = *sp++;
+        size_t n1 = (4 - (uintptr_t) sp) & 3;
+        n -= n1;
 
-        } else {
+        while (n1-- > 0)
+            *dp++ = *sp++;
 
-            const uint32_t *dw_ep = aligned_ptr(ep);
-            const uint32_t *dw_sp = aligned_ptr(sp + 3);
-            uint32_t *dw_dp = aligned_ptr(dp + 3);
+        const uint32_t *dw_sp = (uint32_t *) sp;
+        uint32_t *dw_dp = (uint32_t *) dp;
 
-            while (sp < (uint8_t *) dw_sp)
-                *dp++ = *sp++;
+        size_t n2 = n >> 2;
+        n &= 3;
 
-            while (dw_sp < dw_ep)
-                *dw_dp++ = *dw_sp++;
+        while (n2-- > 0)
+            *dw_dp++ = *dw_sp++;
 
-            sp = (uint8_t *) dw_sp;
-            dp = (uint8_t *) dw_dp;
+        sp = (uint8_t *) dw_sp;
+        dp = (uint8_t *) dw_dp;
 
-            while (sp < ep)
-                *dp++ = *sp++;
-        }
+    forward_byte_copy:
+
+        while (n-- > 0)
+            *dp++ = *sp++;
+
+    } else {
+
+        const uint8_t *sp = (uint8_t *) src + n;
+        uint8_t *dp = (uint8_t *) dst + n;
+
+        if (n < DWORD_COPY_THRESHOLD || alignment(sp) != alignment(dp))
+            goto backward_byte_copy;
+
+        size_t n1 = (uintptr_t) sp & 3;
+        n -= n1;
+
+        while (n1-- > 0)
+            *(--dp) = *(--sp);
+
+        const uint32_t *dw_sp = (uint32_t *) sp;
+        uint32_t *dw_dp = (uint32_t *) dp;
+
+        size_t n2 = n >> 2;
+        n &= 3;
+
+        while (n2-- > 0)
+            *(--dw_dp) = *(--dw_sp);
+
+        sp = (uint8_t *) dw_sp;
+        dp = (uint8_t *) dw_dp;
+
+    backward_byte_copy:
+
+        while (n-- > 0)
+            *(--dp) = *(--sp);
     }
 
     return dst;

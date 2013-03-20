@@ -7,9 +7,6 @@
 #define alignment(p) \
     ((uintptr_t) (p) & 3)
 
-#define aligned_ptr(p) \
-    ((uint32_t *) ((uintptr_t) (p) & ~3))
-
 void *xmemcpy(void *dst, const void *src, size_t n)
 {
     const uint8_t *sp = (uint8_t *) src;

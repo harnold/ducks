@@ -4,34 +4,83 @@
 
 #define DWORD_COPY_THRESHOLD    16
 
-#define alignment(p) \
-    ((uintptr_t) (p) & 3)
+#define alignment(p)            ((uintptr_t) (p) & 3)
+
+#define shift_combine_1(a, b)   (((a) >>  8) + ((b) << 24))
+#define shift_combine_2(a, b)   (((a) >> 16) + ((b) << 16))
+#define shift_combine_3(a, b)   (((a) >> 24) + ((b) <<  8))
 
 void *xmemcpy(void *dst, const void *src, size_t n)
 {
     const uint8_t *sp = (uint8_t *) src;
     uint8_t *dp = (uint8_t *) dst;
 
-    if (n < DWORD_COPY_THRESHOLD || alignment(sp) != alignment(dp))
+    if (n < DWORD_COPY_THRESHOLD)
         goto byte_copy;
 
-    size_t n1 = (4 - (uintptr_t) sp) & 3;
-    n -= n1;
+    unsigned int shift = (uintptr_t) (sp - dp) & 3;
 
-    while (n1-- > 0)
-        *dp++ = *sp++;
+    if (shift == 0) {
 
-    const uint32_t *dw_sp = (uint32_t *) sp;
-    uint32_t *dw_dp = (uint32_t *) dp;
+        size_t n1 = (4 - alignment(dp)) & 3;
+        n -= n1;
 
-    size_t n2 = n >> 2;
-    n &= 3;
+        while (n1-- > 0)
+            *dp++ = *sp++;
 
-    while (n2-- > 0)
-        *dw_dp++ = *dw_sp++;
+        const uint32_t *dw_sp = (uint32_t *) sp;
+        uint32_t *dw_dp = (uint32_t *) dp;
 
-    sp = (uint8_t *) dw_sp;
-    dp = (uint8_t *) dw_dp;
+        size_t n2 = n >> 2;
+        n &= 3;
+
+        while (n2-- > 0)
+            *dw_dp++ = *dw_sp++;
+
+        sp = (uint8_t *) dw_sp;
+        dp = (uint8_t *) dw_dp;
+
+    } else {
+
+        size_t n1 = 4 - alignment(dp);
+        n -= n1;
+
+        while (n1-- > 0)
+            *dp++ = *sp++;
+
+        const uint32_t *dw_sp = (uint32_t *) (sp - shift);
+        uint32_t *dw_dp = (uint32_t *) dp;
+
+        size_t n2 = (n >> 2) - 1;
+        n -= n2 << 2;
+
+        uint32_t a, b;
+
+        a = *dw_sp++;
+
+        if (shift == 1) {
+            while (n2-- > 0) {
+                b = *dw_sp++;
+                *dw_dp++ = shift_combine_1(a, b);
+                a = b;
+            }
+        } else if (shift == 2) {
+            while (n2-- > 0) {
+                b = *dw_sp++;
+                *dw_dp++ = shift_combine_2(a, b);
+                a = b;
+            }
+        } else {
+            while (n2-- > 0) {
+                b = *dw_sp++;
+                *dw_dp++ = shift_combine_3(a, b);
+                a = b;
+            }
+        }
+
+        sp = (uint8_t *) dw_sp - (4 - shift);
+        dp = (uint8_t *) dw_dp;
+    }
 
 byte_copy:
 
@@ -43,6 +92,9 @@ byte_copy:
 
 void *xmemmove(void *dst, const void *src, size_t n)
 {
+    if ((uint8_t *) src + n <= dst || (uint8_t *) dst + n <= src)
+        return xmemcpy(dst, src, n);
+
     if (src >= dst) {
 
         const uint8_t *sp = (uint8_t *) src;

@@ -115,34 +115,35 @@ void *xmemmove(void *dst, const void *src, size_t n)
 void *xmemset(void *ptr, int c, size_t n)
 {
     uint8_t b = (uint8_t) c;
-    uint8_t *ep = (uint8_t *) ptr + n;
     uint8_t *p = (uint8_t *) ptr;
 
-    if (n < DWORD_COPY_THRESHOLD) {
+    if (n < DWORD_COPY_THRESHOLD)
+        goto byte_memset;
 
-        while (p < ep)
-            *p++ = b;
+    size_t n1 = (4 - (uintptr_t) p) & 3;
+    n -= n1;
 
-    } else {
+    while (n1-- > 0)
+        *p++ = b;
 
-        uint32_t dw_b = b;
-        dw_b &= (dw_b << 8);
-        dw_b &= (dw_b << 16);
+    uint32_t dw_b = b;
+    dw_b &= (dw_b << 8);
+    dw_b &= (dw_b << 16);
 
-        uint32_t *dw_ep = aligned_ptr(ep);
-        uint32_t *dw_p = aligned_ptr(p + 3);
+    uint32_t *dw_p = (uint32_t *) p;
 
-        while (p < (uint8_t *) dw_p)
-            *p++ = b;
+    size_t n2 = n >> 2;
+    n &= 3;
 
-        while (dw_p < dw_ep)
-            *dw_p++ = dw_b;
+    while (n2-- > 0)
+        *dw_p++ = dw_b;
 
-        p = (uint8_t *) dw_p;
+    p = (uint8_t *) dw_p;
 
-        while (p < ep)
-            *p++ = b;
-    }
+byte_memset:
+
+    while (n-- > 0)
+        *p++ = b;
 
     return ptr;
 }

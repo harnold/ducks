@@ -5,43 +5,43 @@
 #include <stdint.h>
 
 enum vbe_capabilities {
-    VBE_CAP_DAC_SWITCHABLE_TO_8_BIT             = 1 << 0,
-    VBE_CAP_NO_VGA_CONTROLLER                   = 1 << 1,
-    VBE_CAP_RAMDAC_REQUIRES_VBLANK              = 1 << 2,
-    VBE_CAP_STEREO_SYNC_SUPPORTED               = 1 << 3,
-    VBE_CAP_STEREO_SYNC_VIA_EVC_CONNECTOR       = 1 << 4
+    VBE_DAC_SWITCHABLE_TO_8_BIT         = 1 << 0,
+    VBE_NO_VGA_CONTROLLER               = 1 << 1,
+    VBE_RAMDAC_REQUIRES_VBLANK          = 1 << 2,
+    VBE_STEREO_SYNC_SUPPORTED           = 1 << 3,
+    VBE_STEREO_SYNC_VIA_EVC_CONNECTOR   = 1 << 4
 };
 
 enum vbe_mode_attributes {
-    VBE_MA_MODE_SUPPORTED_BY_HARDWARE           = 1 << 0,
-    VBE_MA_BIOS_TTY_OUTPUT_FUNCTIONS_SUPPORTED  = 1 << 2,
-    VBE_MA_COLOR_MODE                           = 1 << 3,
-    VBE_MA_GRAPHICS_MODE                        = 1 << 4,
-    VBE_MA_MODE_NOT_VGA_COMPATIBLE              = 1 << 5,
-    VBE_MA_WINDOWED_FRAMEBUFFER_NOT_SUPPORTED   = 1 << 6,
-    VBE_MA_LINEAR_FRAMEBUFFER_SUPPORTED         = 1 << 7,
-    VBE_MA_DOUBLE_SCAN_MODE_SUPPORTED           = 1 << 8,
-    VBE_MA_INTERLACED_MODE_SUPPORTED            = 1 << 9,
-    VBE_MA_TRIPLE_BUFFERING_SUPPORTED           = 1 << 10,
-    VBE_MA_STEREO_DISPLAY_SUPPORTED             = 1 << 11,
-    VBE_MA_DUAL_DISPLAY_START_ADDRESS_SUPPORTED = 1 << 12
+    VBE_MODE_SUPPORTED_BY_HARDWARE              = 1 << 0,
+    VBE_BIOS_TTY_OUTPUT_FUNCTIONS_SUPPORTED     = 1 << 2,
+    VBE_COLOR_MODE                              = 1 << 3,
+    VBE_GRAPHICS_MODE                           = 1 << 4,
+    VBE_MODE_NOT_VGA_COMPATIBLE                 = 1 << 5,
+    VBE_WINDOWED_FRAMEBUFFER_NOT_SUPPORTED      = 1 << 6,
+    VBE_LINEAR_FRAMEBUFFER_SUPPORTED            = 1 << 7,
+    VBE_DOUBLE_SCAN_MODE_SUPPORTED              = 1 << 8,
+    VBE_INTERLACED_MODE_SUPPORTED               = 1 << 9,
+    VBE_TRIPLE_BUFFERING_SUPPORTED              = 1 << 10,
+    VBE_STEREO_DISPLAY_SUPPORTED                = 1 << 11,
+    VBE_DUAL_DISPLAY_START_ADDRESS_SUPPORTED    = 1 << 12
 };
 
 enum vbe_win_attributes {
-    VBE_WA_WINDOW_RELOCATABLE           = 1 << 0,
-    VBE_WA_WINDOW_READABLE              = 1 << 1,
-    VBE_WA_WINDOW_WRITABLE              = 1 << 2,
+    VBE_WINDOW_RELOCATABLE              = 1 << 0,
+    VBE_WINDOW_READABLE                 = 1 << 1,
+    VBE_WINDOW_WRITABLE                 = 1 << 2,
 };
 
 enum vbe_memory_model {
-    VBE_MM_TEXT_MODE                    = 0x00,
-    VBE_MM_CGA_GRAPHICS                 = 0x01,
-    VBE_MM_HERCULES_GRAPHICS            = 0x02,
-    VBE_MM_PLANAR                       = 0x03,
-    VBE_MM_PACKED_PIXEL                 = 0x04,
-    VBE_MM_NON_CHAIN_4_256_COLORS       = 0x05,
-    VBE_MM_DIRECT_COLOR                 = 0x06,
-    VBE_MM_YUV                          = 0x07
+    VBE_MEMORY_TEXT_MODE                = 0x00,
+    VBE_MEMORY_CGA_GRAPHICS             = 0x01,
+    VBE_MEMORY_HERCULES_GRAPHICS        = 0x02,
+    VBE_MEMORY_PLANAR                   = 0x03,
+    VBE_MEMORY_PACKED_PIXEL             = 0x04,
+    VBE_MEMORY_NON_CHAIN_4_256_COLORS   = 0x05,
+    VBE_MEMORY_DIRECT_COLOR             = 0x06,
+    VBE_MEMORY_YUV                      = 0x07
 };
 
 enum vbe_mode {
@@ -52,23 +52,23 @@ enum vbe_mode {
 };
 
 enum vbe_mode_flags {
-    VBE_MF_WINDOWED_FRAMEBUFFER         = 0,
-    VBE_MF_LINEAR_FRAMEBUFFER           = 1 << 14,
-    VBE_MF_CLEAR_DISPLAY_MEMORY         = 0,
-    VBE_MF_PRESERVE_DISPLAY_MEMORY      = 1 << 15
+    VBE_WINDOWED_FRAMEBUFFER            = 0,
+    VBE_LINEAR_FRAMEBUFFER              = 1 << 14,
+    VBE_CLEAR_DISPLAY_MEMORY            = 0,
+    VBE_PRESERVE_DISPLAY_MEMORY         = 1 << 15
 };
 
 enum vbe_save_restore_flags {
-    VBE_SR_CONTROLLER_STATE             = 1 << 0,
-    VBE_SR_BIOS_DATA_STATE              = 1 << 1,
-    VBE_SR_DAC_STATE                    = 1 << 2,
-    VBE_SR_REGISTER_STATE               = 1 << 3,
-    VBE_SR_COMPLETE_STATE               = 0x0F
+    VBE_CONTROLLER_STATE                = 1 << 0,
+    VBE_BIOS_DATA_STATE                 = 1 << 1,
+    VBE_DAC_STATE                       = 1 << 2,
+    VBE_REGISTER_STATE                  = 1 << 3,
+    VBE_COMPLETE_STATE                  = 0x0F
 };
 
 enum vbe_scanline_length {
-    VBE_SL_BYTES_PER_SCANLINE,
-    VBE_SL_PIXELS_PER_SCANLINE
+    VBE_BYTES_PER_SCANLINE,
+    VBE_PIXELS_PER_SCANLINE
 };
 
 struct vbe_info {

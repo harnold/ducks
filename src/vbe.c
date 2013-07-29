@@ -260,13 +260,13 @@ int vbe_set_logical_scanline_length(enum vbe_scanline_length unit,
                                     unsigned int *pixels_per_scanline,
                                     unsigned int *max_scanlines)
 {
-    assert(unit == VBE_SL_BYTES_PER_SCANLINE ||
-           unit == VBE_SL_PIXELS_PER_SCANLINE);
+    assert(unit == VBE_BYTES_PER_SCANLINE ||
+           unit == VBE_PIXELS_PER_SCANLINE);
 
     struct dpmi_rm_info rmi;
 
     memset(&rmi, 0, sizeof(rmi));
-    rmi.ebx = (unit == VBE_SL_BYTES_PER_SCANLINE) ? 0x02 : 0x00;
+    rmi.ebx = (unit == VBE_BYTES_PER_SCANLINE) ? 0x02 : 0x00;
     rmi.ecx = length & 0xFFFF;
 
     if (vbe_call_function(0x4F06, &rmi) != 0)

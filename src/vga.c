@@ -1,9 +1,9 @@
+#include "vga.h"
+#include "palette.h"
+
 #include <conio.h>
 #include <i86.h>
 #include <string.h>
-
-#include "palette.h"
-#include "vga.h"
 
 #define VGA_INT                 0x10
 #define VGA_DAC_READ_ADDRESS    0x3C7

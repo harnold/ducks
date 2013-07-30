@@ -1,6 +1,6 @@
-#include <stdint.h>
-
 #include "xmemcpy.h"
+
+#include <stdint.h>
 
 #define DWORD_COPY_THRESHOLD    16
 

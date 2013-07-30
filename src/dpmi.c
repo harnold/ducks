@@ -1,8 +1,8 @@
-#include <i86.h>
-#include <string.h>
-
 #include "dpmi.h"
 #include "error.h"
+
+#include <i86.h>
+#include <string.h>
 
 #define DPMI_INT        0x31
 

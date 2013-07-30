@@ -1,6 +1,6 @@
-#include <dos.h>
-
 #include "timer.h"
+
+#include <dos.h>
 
 #define TIMER_INT       0x1C
 

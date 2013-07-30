@@ -1,10 +1,11 @@
-#include <stddef.h>
-#include <string.h>
-
-#include "error.h"
 #include "image.h"
+#include "error.h"
 #include "pcx.h"
 #include "xmalloc.h"
+
+#include <stddef.h>
+#include <stdlib.h>
+#include <string.h>
 
 void init_image(struct image *image, int width, int height, uint8_t *data)
 {

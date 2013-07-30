@@ -1,8 +1,8 @@
+#include "xmalloc.h"
+#include "error.h"
+
 #include <errno.h>
 #include <stdlib.h>
-
-#include "error.h"
-#include "xmalloc.h"
 
 void *xmalloc(size_t size)
 {

@@ -1,12 +1,12 @@
+#include "vbe.h"
+#include "compat.h"
+#include "dpmi.h"
+#include "error.h"
+
 #include <assert.h>
 #include <stddef.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "compat.h"
-#include "dpmi.h"
-#include "error.h"
-#include "vbe.h"
 
 #define VBE_INT                         0x10
 

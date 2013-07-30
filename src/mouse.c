@@ -1,8 +1,8 @@
+#include "mouse.h"
+#include "error.h"
+
 #include <i86.h>
 #include <string.h>
-
-#include "error.h"
-#include "mouse.h"
 
 #define MOUSE_INT       0x33
 

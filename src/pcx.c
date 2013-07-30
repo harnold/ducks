@@ -1,15 +1,15 @@
+#include "pcx.h"
+#include "error.h"
+#include "image.h"
+#include "palette.h"
+#include "rgb.h"
+#include "xmalloc.h"
+
 #include <errno.h>
 #include <stdint.h>
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
-
-#include "error.h"
-#include "image.h"
-#include "palette.h"
-#include "pcx.h"
-#include "rgb.h"
-#include "xmalloc.h"
 
 #define PCX_HEADER_SIZE         128
 #define PCX_PALETTE_SIZE        768

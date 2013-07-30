@@ -297,12 +297,15 @@ int vbe_get_display_start(int *pixel, int *scanline)
     return 0;
 }
 
-int vbe_set_display_start(int pixel, int scanline, bool wait_for_retrace)
+int vbe_set_display_start(int pixel, int scanline, unsigned int wait_for_retrace)
 {
+    assert(wait_for_retrace == VBE_IGNORE_RETRACE ||
+           wait_for_retrace == VBE_WAIT_FOR_RETRACE);
+
     struct dpmi_rm_info rmi;
 
     memset(&rmi, 0, sizeof(rmi));
-    rmi.ebx = wait_for_retrace << 7;
+    rmi.ebx = wait_for_retrace;
     rmi.ecx = pixel;
     rmi.edx = scanline;
 
@@ -310,12 +313,15 @@ int vbe_set_display_start(int pixel, int scanline, bool wait_for_retrace)
 }
 
 int vbe_set_palette_data(int start, int count, uint32_t data_rm_ptr,
-                         bool wait_for_retrace)
+                         unsigned int wait_for_retrace)
 {
+    assert(wait_for_retrace == VBE_IGNORE_RETRACE ||
+           wait_for_retrace == VBE_WAIT_FOR_RETRACE);
+
     struct dpmi_rm_info rmi;
 
     memset(&rmi, 0, sizeof(rmi));
-    rmi.ebx = wait_for_retrace << 7;
+    rmi.ebx = wait_for_retrace;
     rmi.ecx = count;
     rmi.edx = start;
     rmi.es = hword(data_rm_ptr);

@@ -17,20 +17,28 @@ static inline char *stpcpy(char *dst, const char *src)
     return dst;
 }
 
-#ifndef static_assert
+#ifndef __unique_identifier
 
 #define __concat1(a, b)                 a##b
 #define __concat(a, b)                  __concat1(a, b)
 #define __unique_identifier(prefix)     __concat(prefix, __LINE__)
+
+#endif /* __unique_identifier */
+
+#if __STDC_VERSION__ < 201000
+
+#ifndef static_assert
 
 #define _Static_assert(cond, msg) \
         typedef struct { \
             int __static_assert_failure: (cond) ? 1 : -1; \
         } __unique_identifier(__static_assert_);
 
-#define static_assert _Static_assert
+#define static_assert   _Static_assert
 
 #endif /* static_assert */
+
+#endif /* C standard < C11 */
 
 #if defined(__WATCOMC__)
 
@@ -38,6 +46,6 @@ static inline char *stpcpy(char *dst, const char *src)
 
 #else
 #error Unsupported compiler
-#endif
+#endif /* Watcom C */
 
 #endif

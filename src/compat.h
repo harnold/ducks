@@ -38,6 +38,13 @@ static inline char *stpcpy(char *dst, const char *src)
 
 #endif /* static_assert */
 
+#ifndef alignof
+
+#define _Alignof(type)  offsetof(struct { char a; type b; }, b)
+#define alignof(type)   _Alignof(type)
+
+#endif /* alignof */
+
 #endif /* C standard < C11 */
 
 #if defined(__WATCOMC__)

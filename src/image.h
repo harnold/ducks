@@ -1,6 +1,8 @@
 #ifndef IMAGE_H
 #define IMAGE_H
 
+#include "alloc.h"
+
 #include <stdint.h>
 
 struct image {
@@ -8,6 +10,8 @@ struct image {
     int width;
     int height;
 };
+
+DECLARE_ALLOCATOR(image, struct image);
 
 void init_image(struct image *image, int width, int height, uint8_t *data);
 void destroy_image(struct image *image);

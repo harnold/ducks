@@ -1,3 +1,7 @@
+[The modules containing the sprite/animation system and the game logic
+ have not yet been importet into git.  I have adjusted the Makefile so
+ that the existing modules can be built.]
+
 
                                    DUCKS!
 

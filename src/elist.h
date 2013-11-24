@@ -12,15 +12,15 @@ struct elist {
     struct elist_node end;
 };
 
-void init_elist(struct elist *list);
-struct elist_node *elist_begin(struct elist *list);
-struct elist_node *elist_end(struct elist *list);
-bool elist_empty(struct elist *list);
-void elist_insert(struct elist_node *node, struct elist_node *next);
-void elist_remove(struct elist_node *node);
-void elist_move(struct elist_node *node, struct elist_node *next);
-void elist_splice(struct elist_node *begin, struct elist_node *end,
-                  struct elist_node *next);
+static inline void init_elist(struct elist *list);
+static inline struct elist_node *elist_begin(struct elist *list);
+static inline struct elist_node *elist_end(struct elist *list);
+static inline bool elist_empty(struct elist *list);
+static inline void elist_insert(struct elist_node *node, struct elist_node *next);
+static inline void elist_remove(struct elist_node *node);
+static inline void elist_move(struct elist_node *node, struct elist_node *next);
+static inline void elist_splice(struct elist_node *begin, struct elist_node *end,
+                                struct elist_node *next);
 
 #define elist_get(node, type, member) \
     (type *) (((char *) (node)) - offsetof((type), (member)))

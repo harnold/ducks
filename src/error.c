@@ -9,7 +9,7 @@
 static void vprinterr(const char *prefix, int errnum, const char *format,
                       va_list args)
 {
-    char msg[1024];
+    static char msg[1024];
 
     vsnprintf(msg, sizeof(msg), format, args);
     fflush(stdout);

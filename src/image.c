@@ -29,15 +29,11 @@ int load_image(const char *path, struct image *image)
 {
     const char *ext = strrchr(path, '.');
 
-    if (!ext) {
-        error("File '%s' has no known image file format", path);
-        return -1;
-    }
+    if (!ext)
+        return error("File '%s' has no known image file format", path);
 
-    if (strcmp(ext, ".pcx") == 0) {
+    if (strcmp(ext, ".pcx") == 0)
         return pcx_load_image(path, image);
-    } else {
-        error("File '%s' has no known image file format", path);
-        return -1;
-    }
+    else
+        return error("File '%s' has no known image file format", path);
 }

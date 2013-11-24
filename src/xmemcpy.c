@@ -10,6 +10,11 @@
 #define shift_combine_2(a, b)   (((a) >> 16) + ((b) << 16))
 #define shift_combine_3(a, b)   (((a) >> 24) + ((b) <<  8))
 
+/* Note: The following functions were originally targeted at P5 class CPUs, on
+ * which their performance should be close to optimal for C code.  For today's
+ * CPUs and compilers, it's better to write a simple counter-based copy loop,
+ * and let the compiler's vectorizer do its job. */
+
 void *xmemcpy(void *dst, const void *src, size_t n)
 {
     const uint8_t *sp = (uint8_t *) src;

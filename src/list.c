@@ -1,7 +1,7 @@
 #include "list.h"
-#include "xmalloc.h"
+#include "alloc.h"
 
-#include <stdlib.h>
+DEFINE_ALLOCATOR(list_node, struct list_node, ALLOC_DEFAULT_BLOB_SIZE);
 
 static inline void list_link(struct list_node *prev, struct list_node *next)
 {
@@ -14,12 +14,12 @@ void destroy_list(struct list *list)
     struct list_node *node, *tmp;
 
     list_for_each_node_safe(node, tmp, list)
-        free(node);
+        free_list_node(node);
 }
 
 struct list_node *list_insert(void *ptr, struct list_node *next)
 {
-    struct list_node *node = xmalloc(sizeof(struct list_node));
+    struct list_node *node = alloc_list_node();
 
     node->elem = ptr;
     list_link(next->prev, node);
@@ -32,7 +32,7 @@ struct list_node *list_remove(struct list_node *node)
     struct list_node *next = node->next;
 
     list_link(node->prev, next);
-    free(node);
+    free_list_node(node);
     return next;
 }
 

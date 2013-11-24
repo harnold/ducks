@@ -1,8 +1,7 @@
 CC = wcc386
 LD = wlink
 
-CP = cp
-RM = rm
+RM = rm -f
 
 EXE = ducks.exe
 

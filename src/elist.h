@@ -20,7 +20,7 @@ void elist_insert(struct elist_node *node, struct elist_node *next);
 void elist_remove(struct elist_node *node);
 void elist_move(struct elist_node *node, struct elist_node *next);
 void elist_splice(struct elist_node *begin, struct elist_node *end,
-                  struct elist_node *next)
+                  struct elist_node *next);
 
 #define elist_get(node, type, member) \
     (type *) (((char *) (node)) - offsetof((type), (member)))

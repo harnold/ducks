@@ -7,8 +7,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-DEFINE_ALLOCATOR(image, struct image, ALLOC_DEFAULT_BLOB_SIZE);
-
 void init_image(struct image *image, int width, int height, uint8_t *data)
 {
     image->width = width;

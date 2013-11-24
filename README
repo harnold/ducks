@@ -1,0 +1,56 @@
+
+                                   DUCKS!
+
+
+Introduction
+------------
+
+    DUCKS is a minimalistic remake of the game "Moorhuhn" aka. "Crazy
+    Chicken", a game which, despite (or because of) its stupidity, was so
+    popular in the Germany of the late 90s that it was jokingly accused of
+    having a measurable negative impact on the national economy due to the
+    numerous work hours wasted by employees playing the game.  This remake
+    gives you the chance to counter productivity once again...
+
+
+How to play
+-----------
+
+    Your task in this game is simple: shoot as many flying ducks as you
+    can in 90 seconds.  You earn points for each duck that you hit.  Of
+    course, hitting a quick duck yields more points than hitting a slow
+    one.  Your current score is displayed in the top-right corner of the
+    screen.  The number in the top-left corner is your remaining time.
+
+    Controls: Aim with your mouse, shoot by pressing the left mouse
+    button.  To cancel the game before your time expires, press the
+    'Esc' key.
+
+
+System requirements
+-------------------
+
+    DUCKS runs under DOS and Windows 9x.  It requires an SVGA card with
+    at least 1MB of video memory that can display 800x600 pixels at 256
+    colors and that supports VBE 2.0.
+
+    If you have a more recent system, you can try to run the game in a
+    virtual machine using FreeDOS or use a DOS emulator such as DOSBox
+    or DOSEMU.
+
+
+Production notes
+----------------
+
+    The following tools were used to produce DUCKS:
+
+    - Compiler/Assembler: Watcom C/C++ 10.6
+    - 3d modeling and rendering: 3D Studio MAX
+    - 2d image editing: Corel Photo-Paint, GIMP
+
+
+License
+-------
+
+    DUCKS is licensed under the conditions specified in the accompanying
+    LICENSE file.

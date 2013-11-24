@@ -20,7 +20,6 @@ all: $(EXE) .symbolic
 
 $(EXE): $(OBJS)
 	$(LD) $(LFLAGS)
-	$(CP) $(EXE) ..
 
 clean: .symbolic
 	$(RM) *.obj

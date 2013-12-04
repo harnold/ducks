@@ -11,9 +11,9 @@
 #define shift_combine_3(a, b)   (((a) >> 24) + ((b) <<  8))
 
 /* Note: The following functions were originally targeted at P5 class CPUs, on
- * which their performance should be close to optimal for C code.  For today's
- * CPUs and compilers, it's better to write a simple counter-based copy loop,
- * and let the compiler's vectorizer do its job. */
+ * which the performance of xmemcpy() should be close to optimal for C code.
+ * For today's CPUs and compilers, it's better to write simple counter-based
+ * copy loops, and let the compiler's vectorizer do its job. */
 
 void *xmemcpy(void *dst, const void *src, size_t n)
 {
@@ -94,6 +94,9 @@ byte_copy:
 
     return dst;
 }
+
+/* We don't need the shift-and-combine algorithm for xmemmove() and xmemset()
+ * because are using these functions mostly for properly aligned data. */
 
 void *xmemmove(void *dst, const void *src, size_t n)
 {

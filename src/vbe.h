@@ -72,8 +72,8 @@ enum vbe_scanline_length {
 };
 
 enum {
-    VBE_IGNORE_RETRACE                  = 0x00,
-    VBE_WAIT_FOR_RETRACE                = 0x80
+    VBE_IGNORE_RETRACE,
+    VBE_WAIT_FOR_RETRACE
 };
 
 struct vbe_info {
@@ -141,8 +141,8 @@ int vbe_set_logical_scanline_length(enum vbe_scanline_length unit,
                                     unsigned int *pixels_per_scanline,
                                     unsigned int *max_scanlines);
 int vbe_get_display_start(int *pixel, int *scanline);
-int vbe_set_display_start(int pixel, int scanline, unsigned wait_for_retrace);
+int vbe_set_display_start(int pixel, int scanline, int wait_for_retrace);
 int vbe_set_palette_data(int start, int count, uint32_t data_rm_ptr,
-                         unsigned wait_for_retrace);
+                         int wait_for_retrace);
 
 #endif

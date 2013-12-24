@@ -144,7 +144,7 @@ int vbe_get_mode_info(int mode, struct vbe_mode_info *info)
     return 0;
 }
 
-int vbe_set_mode(int mode, unsigned int flags)
+int vbe_set_mode(int mode, unsigned flags)
 {
     struct dpmi_rm_info rmi;
 
@@ -154,7 +154,7 @@ int vbe_set_mode(int mode, unsigned int flags)
     return vbe_call_function(0x4F02, &rmi);
 }
 
-int vbe_get_mode(int *mode, unsigned int *flags)
+int vbe_get_mode(int *mode, unsigned *flags)
 {
     struct dpmi_rm_info rmi;
 
@@ -168,7 +168,7 @@ int vbe_get_mode(int *mode, unsigned int *flags)
     return 0;
 }
 
-int vbe_save_state(unsigned int flags, uint32_t *handle)
+int vbe_save_state(unsigned flags, uint32_t *handle)
 {
     struct dpmi_rm_info rmi;
 
@@ -199,7 +199,7 @@ int vbe_save_state(unsigned int flags, uint32_t *handle)
     return 0;
 }
 
-int vbe_restore_state(unsigned int flags, uint32_t handle)
+int vbe_restore_state(unsigned flags, uint32_t handle)
 {
     struct dpmi_rm_info rmi;
 
@@ -297,7 +297,7 @@ int vbe_get_display_start(int *pixel, int *scanline)
     return 0;
 }
 
-int vbe_set_display_start(int pixel, int scanline, unsigned int wait_for_retrace)
+int vbe_set_display_start(int pixel, int scanline, unsigned wait_for_retrace)
 {
     assert(wait_for_retrace == VBE_IGNORE_RETRACE ||
            wait_for_retrace == VBE_WAIT_FOR_RETRACE);
@@ -313,7 +313,7 @@ int vbe_set_display_start(int pixel, int scanline, unsigned int wait_for_retrace
 }
 
 int vbe_set_palette_data(int start, int count, uint32_t data_rm_ptr,
-                         unsigned int wait_for_retrace)
+                         unsigned wait_for_retrace)
 {
     assert(wait_for_retrace == VBE_IGNORE_RETRACE ||
            wait_for_retrace == VBE_WAIT_FOR_RETRACE);

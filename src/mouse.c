@@ -24,13 +24,13 @@ void mouse_exit(void)
 {
 }
 
-void mouse_get_status(unsigned int *buttons, int *dx, int *dy)
+void mouse_get_status(unsigned *buttons, int *dx, int *dy)
 {
     mouse_get_buttons(buttons);
     mouse_get_delta(dx, dy);
 }
 
-void mouse_get_buttons(unsigned int *buttons)
+void mouse_get_buttons(unsigned *buttons)
 {
     union REGS regs;
 

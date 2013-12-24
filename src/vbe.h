@@ -126,10 +126,10 @@ struct vbe_mode_info {
 
 int vbe_get_info(struct vbe_info *info);
 int vbe_get_mode_info(int mode, struct vbe_mode_info *mode_info);
-int vbe_set_mode(int mode, unsigned int flags);
-int vbe_get_mode(int *mode, unsigned int *flags);
-int vbe_save_state(unsigned int flags, uint32_t *handle);
-int vbe_restore_state(unsigned int flags, uint32_t handle);
+int vbe_set_mode(int mode, unsigned flags);
+int vbe_get_mode(int *mode, unsigned *flags);
+int vbe_save_state(unsigned flags, uint32_t *handle);
+int vbe_restore_state(unsigned flags, uint32_t handle);
 int vbe_free_state(uint32_t handle);
 int vbe_get_logical_scanline_length(unsigned int *bytes_per_scanline,
                                     unsigned int *pixels_per_scanline);
@@ -141,8 +141,8 @@ int vbe_set_logical_scanline_length(enum vbe_scanline_length unit,
                                     unsigned int *pixels_per_scanline,
                                     unsigned int *max_scanlines);
 int vbe_get_display_start(int *pixel, int *scanline);
-int vbe_set_display_start(int pixel, int scanline, unsigned int wait_for_retrace);
+int vbe_set_display_start(int pixel, int scanline, unsigned wait_for_retrace);
 int vbe_set_palette_data(int start, int count, uint32_t data_rm_ptr,
-                         unsigned int wait_for_retrace);
+                         unsigned wait_for_retrace);
 
 #endif

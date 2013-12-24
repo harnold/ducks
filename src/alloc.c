@@ -14,7 +14,7 @@ void *_allocate_entry(struct allocator *alloc)
     } else {
 
         size_t size = alloc->bytes_per_entry;
-        struct blob *blob = alloc->blobs;
+        struct alloc_blob *blob = alloc->blobs;
 
         if (blob == NULL || blob->bytes_left < size) {
 
@@ -22,7 +22,7 @@ void *_allocate_entry(struct allocator *alloc)
             blob->next = alloc->blobs;
             blob->size = alloc->blob_size;
             blob->bytes_left = blob->size - alloc->data_offset;
-            blob->offset = alloc->data_offset - offsetof(struct blob, data);
+            blob->offset = alloc->data_offset - offsetof(struct alloc_blob, data);
 
             alloc->blobs = blob;
         }
@@ -43,10 +43,10 @@ void _free_entry(struct allocator *alloc, void *entry)
 
 void _free_all(struct allocator *alloc)
 {
-    struct blob *blob = alloc->blobs;
+    struct alloc_blob *blob = alloc->blobs;
 
     while (blob != NULL) {
-        struct blob *next = blob->next;
+        struct alloc_blob *next = blob->next;
         free(blob);
         blob = next;
     }

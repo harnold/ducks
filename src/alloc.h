@@ -6,8 +6,8 @@
 #include <stddef.h>
 #include <stdint.h>
 
-struct blob {
-    struct blob *next;
+struct alloc_blob {
+    struct alloc_blob *next;
     size_t size;
     size_t bytes_left;
     size_t offset;
@@ -18,7 +18,7 @@ struct allocator {
     size_t blob_size;
     size_t data_offset;
     size_t bytes_per_entry;
-    struct blob *blobs;
+    struct alloc_blob *blobs;
     void *free_entries;
 };
 
@@ -39,7 +39,7 @@ void _free_all(struct allocator *alloc);
 #define _DEFINE_ALLOCATOR(name, type, alignment, blobsize) \
     static struct allocator name##_allocator = { \
         .blob_size = blobsize, \
-        .data_offset = (offsetof(struct blob, data) + alignment - 1) & ~(alignment - 1), \
+        .data_offset = (offsetof(struct alloc_blob, data) + alignment - 1) & ~(alignment - 1), \
         .bytes_per_entry = (sizeof(type) + alignment - 1) & ~(alignment - 1), \
         .blobs = NULL, \
         .free_entries = NULL \

@@ -4,7 +4,7 @@
 
 #define TIMER_INT       0x1C
 
-timer_handler timer_default_handler;
+static timer_handler timer_default_handler;
 
 void timer_init(void)
 {

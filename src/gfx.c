@@ -235,7 +235,7 @@ bool gfx_clip(int *x, int *y, int *w, int *h)
     return true;
 }
 
-void gfx_blit(uint8_t *src, int src_stride,
+void gfx_blit(const uint8_t *src, int src_stride,
               int src_x, int src_y,
               int src_w, int src_h,
               uint8_t *dst, int dst_stride,
@@ -251,7 +251,7 @@ void gfx_blit(uint8_t *src, int src_stride,
     }
 }
 
-void gfx_blit_masked(uint8_t *src, int src_stride,
+void gfx_blit_masked(const uint8_t *src, int src_stride,
                      int src_x, int src_y,
                      int src_w, int src_h,
                      uint8_t *dst, int dst_stride,

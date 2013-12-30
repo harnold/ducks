@@ -20,10 +20,10 @@ static uint8_t *gfx_buffer_2;
 static uint8_t *gfx_front_buffer;
 static uint8_t *gfx_back_buffer;
 
-static int gfx_clip_x1;
-static int gfx_clip_y1;
-static int gfx_clip_x2;
-static int gfx_clip_y2;
+static int gfx_clip_x;
+static int gfx_clip_y;
+static int gfx_clip_w;
+static int gfx_clip_h;
 
 static int gfx_check_vbe_info(struct vbe_info *info)
 {
@@ -167,20 +167,60 @@ void gfx_get_mode_info(struct gfx_mode_info *info)
     *info = gfx_mode_info;
 }
 
-void gfx_set_clip_rect(int x1, int y1, int x2, int y2)
+void gfx_set_clip_rect(int x, int y, int w, int h)
 {
-    gfx_clip_x1 = x1;
-    gfx_clip_y1 = y1;
-    gfx_clip_x2 = x2;
-    gfx_clip_y2 = y2;
+    gfx_clip_x = x;
+    gfx_clip_y = y;
+    gfx_clip_w = w;
+    gfx_clip_h = h;
 }
 
 void gfx_reset_clip_rect(void)
 {
-    gfx_clip_x1 = 0;
-    gfx_clip_y1 = 0;
-    gfx_clip_x2 = gfx_mode_info.x_resolution - 1;
-    gfx_clip_y2 = gfx_mode_info.y_resolution - 1;
+    gfx_clip_x = 0;
+    gfx_clip_y = 0;
+    gfx_clip_w = gfx_mode_info.x_resolution;
+    gfx_clip_h = gfx_mode_info.y_resolution;
+}
+
+bool gfx_clip(int *x, int *y, int *w, int *h)
+{
+    int xs = *x;
+    int ys = *y;
+    int xe = xs + *w - 1;
+    int ye = ys + *h - 1;
+    int clip_xe = gfx_clip_x + gfx_clip_w - 1;
+    int clip_ye = gfx_clip_y + gfx_clip_h - 1;
+
+    /* Completely inside the clipping rectangle? */
+
+    if (xs >= gfx_clip_x && xe <= clip_xe &&
+        ys >= gfx_clip_y && ye <= clip_ye)
+        return true;
+
+    /* Completely outside the clipping rectangle? */
+
+    if (xs > clip_xe || xe < gfx_clip_x ||
+        ys > clip_ye || ye < gfx_clip_y)
+        return false;
+
+    /* Partially inside the clipping rectangle. */
+
+    if (xs < gfx_clip_x)
+        xs = gfx_clip_x;
+    if (ys < gfx_clip_y)
+        ys = gfx_clip_y;
+    if (xe > clip_xe)
+        xe = clip_xe;
+    if (ye > clip_ye)
+        ye = clip_ye;
+
+    *x = xs;
+    *y = ys;
+    *w = xe - xs + 1;
+    *h = ye - ys + 1;
+
+    return true;
 }
 
 void gfx_flip(void)
@@ -194,42 +234,4 @@ void gfx_flip(void)
         gfx_front_buffer = gfx_buffer_1;
         gfx_back_buffer = gfx_buffer_2;
     }
-}
-
-bool gfx_clip(int *x, int *y, int *w, int *h)
-{
-    int xs = *x;
-    int ys = *y;
-    int xe = xs + *w - 1;
-    int ye = ys + *h - 1;
-
-    /* Completely outside the clipping rectangle? */
-
-    if (xs > gfx_clip_x2 || xe < gfx_clip_x1 ||
-        ys > gfx_clip_y2 || ye < gfx_clip_y1)
-        return false;
-
-    /* Completely inside the clipping rectangle? */
-
-    if (xs >= gfx_clip_x1 && xe <= gfx_clip_x2 &&
-        ys >= gfx_clip_y1 && ye <= gfx_clip_y2)
-        return true;
-
-    /* Partially inside the clipping rectangle. */
-
-    if (xs < gfx_clip_x1)
-        xs = gfx_clip_x1;
-    if (ys < gfx_clip_y1)
-        ys = gfx_clip_y1;
-    if (xe > gfx_clip_x2)
-        xe = gfx_clip_x2;
-    if (ye > gfx_clip_y2)
-        ye = gfx_clip_y2;
-
-    *x = xs;
-    *y = ys;
-    *w = xe - xs + 1;
-    *h = ye - ys + 1;
-
-    return true;
 }

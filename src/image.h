@@ -3,6 +3,11 @@
 
 #include <stdint.h>
 
+enum image_blit_mode {
+    IMAGE_BLIT_COPY = 0,
+    IMAGE_BLIT_MASK = 1 << 0,
+};
+
 struct image {
     uint8_t *data;
     int width;
@@ -12,5 +17,7 @@ struct image {
 void init_image(struct image *image, int width, int height, uint8_t *data);
 void destroy_image(struct image *image);
 int load_image(const char *path, struct image *image);
+void image_blit(const struct image *src, int src_x, int src_y, int src_w, int src_h,
+                struct image *dst, int dst_x, int dst_y, unsigned flags);
 
 #endif

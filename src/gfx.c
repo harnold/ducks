@@ -4,7 +4,6 @@
 #include "image.h"
 #include "vbe.h"
 #include "vga.h"
-#include "xmemcpy.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -233,48 +232,4 @@ bool gfx_clip(int *x, int *y, int *w, int *h)
     *h = ye - ys + 1;
 
     return true;
-}
-
-void gfx_blit(const uint8_t *src, int src_stride,
-              int src_x, int src_y,
-              int src_w, int src_h,
-              uint8_t *dst, int dst_stride,
-              int dst_x, int dst_y)
-{
-    const uint8_t *sp = src + src_stride * src_y + src_x;
-    uint8_t *dp = dst + dst_stride * dst_y + dst_x;
-
-    for (int i = 0; i < src_h; i++) {
-        xmemcpy(dp, sp, src_w);
-        sp += dst_stride;
-        dp += src_stride;
-    }
-}
-
-void gfx_blit_masked(const uint8_t *src, int src_stride,
-                     int src_x, int src_y,
-                     int src_w, int src_h,
-                     uint8_t *dst, int dst_stride,
-                     int dst_x, int dst_y)
-{
-    int src_off = src_stride - src_w;
-    int dst_off = dst_stride - src_w;
-
-    const uint8_t *sp = src + src_stride * src_y + src_x;
-    uint8_t *dp = dst + dst_stride * dst_y + dst_x;
-
-    for (int i = 0; i < src_h; i++) {
-
-        for (int j = 0; j < src_w; j++) {
-            if (*sp != 0) {
-                *dp++ = *sp++;
-            } else {
-                sp++;
-                dp++;
-            }
-        }
-
-        sp += src_off;
-        dp += dst_off;
-    }
 }

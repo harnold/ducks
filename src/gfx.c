@@ -15,10 +15,10 @@ static struct gfx_mode_info gfx_mode_info;
 static int gfx_saved_vga_mode;
 
 static uint32_t gfx_framebuffer_address = 0;
-static uint8_t *gfx_buffer_1;
-static uint8_t *gfx_buffer_2;
-static uint8_t *gfx_front_buffer;
-static uint8_t *gfx_back_buffer;
+static struct image gfx_buffer_1;
+static struct image gfx_buffer_2;
+static struct image *gfx_front_buffer;
+static struct image *gfx_back_buffer;
 
 static int gfx_clip_x;
 static int gfx_clip_y;
@@ -129,10 +129,18 @@ int gfx_init(int mode)
         goto failure;
     }
 
-    gfx_buffer_1 = (uint8_t *) gfx_framebuffer_address;
-    gfx_buffer_2 = gfx_buffer_1 + gfx_mode_info.page_size;
-    gfx_front_buffer = gfx_buffer_1;
-    gfx_back_buffer = gfx_buffer_2;
+    init_image(&gfx_buffer_1,
+               gfx_mode_info.x_resolution,
+               gfx_mode_info.y_resolution,
+               (uint8_t *) gfx_framebuffer_address);
+
+    init_image(&gfx_buffer_2,
+               gfx_mode_info.x_resolution,
+               gfx_mode_info.y_resolution,
+               gfx_buffer_1.data + gfx_mode_info.page_size);
+
+    gfx_front_buffer = &gfx_buffer_1;
+    gfx_back_buffer = &gfx_buffer_2;
 
     gfx_check_refresh_rate();
     gfx_reset_clip_rect();
@@ -225,13 +233,13 @@ bool gfx_clip(int *x, int *y, int *w, int *h)
 
 void gfx_flip(void)
 {
-    if (gfx_front_buffer == gfx_buffer_1) {
+    if (gfx_front_buffer == &gfx_buffer_1) {
         vbe_set_display_start(0, gfx_mode_info.y_resolution, VBE_WAIT_FOR_RETRACE);
-        gfx_front_buffer = gfx_buffer_2;
-        gfx_back_buffer = gfx_buffer_1;
+        gfx_front_buffer = &gfx_buffer_2;
+        gfx_back_buffer = &gfx_buffer_1;
     } else {
         vbe_set_display_start(0, 0, VBE_WAIT_FOR_RETRACE);
-        gfx_front_buffer = gfx_buffer_1;
-        gfx_back_buffer = gfx_buffer_2;
+        gfx_front_buffer = &gfx_buffer_1;
+        gfx_back_buffer = &gfx_buffer_2;
     }
 }

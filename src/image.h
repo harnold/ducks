@@ -5,7 +5,7 @@
 
 enum image_blit_mode {
     IMAGE_BLIT_COPY = 0,
-    IMAGE_BLIT_MASK = 1 << 0,
+    IMAGE_BLIT_MASK = 1,
 };
 
 struct image {

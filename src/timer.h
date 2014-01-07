@@ -1,10 +1,12 @@
 #ifndef TIMER_H
 #define TIMER_H
 
-typedef void __interrupt (*timer_handler)();
-
-void timer_init(void);
+int timer_init(double ticks_per_sec);
 void timer_exit(void);
-void timer_set_handler(timer_handler handler);
+double timer_ticks_per_sec(void);
+unsigned int timer_get_ticks(void);
+unsigned int timer_get_ticks_delta(void);
+double timer_get_time(void);
+double timer_get_time_delta(void);
 
 #endif

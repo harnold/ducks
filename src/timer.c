@@ -1,22 +1,148 @@
 #include "timer.h"
+#include "atomic.h"
+#include "dpmi.h"
+#include "error.h"
 
+#include <conio.h>
 #include <dos.h>
 
-#define TIMER_INT       0x1C
+#define PIT_SYSTEM_INT      0x08
+#define PIT_USER_INT        0x1C
 
-static timer_handler timer_default_handler;
+#define PIT_BASE_FREQUENCY  (3579545.0 / 3)
+#define PIT_COUNTER_MAX     65536
 
-void timer_init(void)
+#define PIT_CH0_DATA        0x40
+#define PIT_COMMAND         0x43
+
+#define PIC_MASTER_COMMAND  0x20
+#define PIC_MASTER_DATA     0x21
+#define PIC_EOI             0x20
+
+typedef void __interrupt (*timer_handler_t)();
+
+static struct {
+    timer_handler_t default_handler;
+    int counter_init;
+    double frequency;
+    volatile unsigned int ticks;
+    unsigned int last_ticks_value;
+} timer;
+
+#pragma off (check_stack)
+
+static void __interrupt timer_handler(union INTPACK regs)
 {
-    timer_default_handler = _dos_getvect(TIMER_INT);
+    static int bios_counter = 0;
+
+    timer.ticks++;
+    bios_counter += timer.counter_init;
+
+    if (bios_counter >= PIT_COUNTER_MAX) {
+        bios_counter -= PIT_COUNTER_MAX;
+        _chain_intr(timer.default_handler);
+    } else {
+        outp(PIC_MASTER_COMMAND, PIC_EOI);
+    }
+}
+
+static void timer_handler_end(void) {}
+
+#pragma on (check_stack)
+
+int timer_init(double ticks_per_sec)
+{
+    timer.counter_init = (int) (PIT_BASE_FREQUENCY / ticks_per_sec + 0.5);
+
+    if (timer.counter_init >= PIT_COUNTER_MAX) {
+        return error("Requested timer frequency of %.2d Hz too low;"
+                     "minimum frequency is 18.2 Hz", ticks_per_sec);
+    } else if (timer.counter_init < 1) {
+        return error("Requested timer frequency of %.2d Hz too high;"
+                     "maximum frequency is 1.193181 MHz", ticks_per_sec);
+    }
+
+    timer.frequency = PIT_BASE_FREQUENCY / timer.counter_init;
+    timer.ticks = 0;
+    timer.last_ticks_value = 0;
+
+    if (dpmi_lock_linear_region((uint32_t) &timer, sizeof(timer)) != 0)
+        return error("Locking timer data failed");
+
+    if (dpmi_lock_linear_region(
+            (uint32_t) timer_handler,
+            (char *) timer_handler_end - (char *) timer_handler) != 0) {
+        dpmi_unlock_linear_region((uint32_t) &timer, sizeof(timer));
+        return error("Locking timer interrupt handler failed");
+    }
+
+    timer.default_handler = _dos_getvect(PIT_SYSTEM_INT);
+
+    disable_interrupts();
+
+    /* Set channel 0 to rate generator mode, <ticks_per_sec> Hz. */
+
+    outp(PIT_COMMAND, 52);
+    outp(PIT_CH0_DATA, timer.counter_init & 0xFF);
+    outp(PIT_CH0_DATA, timer.counter_init >> 8);
+
+    _dos_setvect(PIT_SYSTEM_INT, timer_handler);
+
+    enable_interrupts();
+
+    return 0;
 }
 
 void timer_exit(void)
 {
-    _dos_setvect(TIMER_INT, timer_default_handler);
+    disable_interrupts();
+
+    /* Reset channel 0 to square wave mode, 18.2 Hz. */
+
+    outp(PIT_COMMAND, 54);
+    outp(PIT_CH0_DATA, 0x00);
+    outp(PIT_CH0_DATA, 0x00);
+
+    _dos_setvect(PIT_SYSTEM_INT, timer.default_handler);
+
+    enable_interrupts();
+
+    if (dpmi_unlock_linear_region((uint32_t) &timer, sizeof(timer)) != 0)
+        error("Unlocking timer data failed");
+
+    if (dpmi_unlock_linear_region(
+            (uint32_t) &timer_handler,
+            (char *) timer_handler_end - (char *) timer_handler) != 0)
+        error(" Unlocking timer interrupt handler failed");
 }
 
-void timer_set_handler(timer_handler handler)
+double timer_ticks_per_sec(void)
 {
-    _dos_setvect(TIMER_INT, handler);
+    return timer.frequency;
+}
+
+unsigned int timer_get_ticks(void)
+{
+    timer.last_ticks_value = timer.ticks;
+    return timer.ticks;
+}
+
+unsigned int timer_get_ticks_delta(void)
+{
+    unsigned int delta = timer.ticks - timer.last_ticks_value;
+    timer.last_ticks_value = timer.ticks;
+    return delta;
+}
+
+double timer_get_time(void)
+{
+    timer.last_ticks_value = timer.ticks;
+    return timer.ticks / timer.frequency;
+}
+
+double timer_get_time_delta(void)
+{
+    unsigned int delta = timer.ticks - timer.last_ticks_value;
+    timer.last_ticks_value = timer.ticks;
+    return delta / timer.frequency;
 }

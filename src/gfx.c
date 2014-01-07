@@ -2,12 +2,12 @@
 #include "dpmi.h"
 #include "error.h"
 #include "image.h"
+#include "timer.h"
 #include "vbe.h"
 #include "vga.h"
 
 #include <stdio.h>
 #include <stdlib.h>
-#include <time.h>
 
 #define REFRESH_RATE_TEST_CYCLES	30
 
@@ -74,17 +74,20 @@ static int gfx_check_vbe_mode_info(struct vbe_info *info, int mode,
 
 static void gfx_check_refresh_rate(void)
 {
-    clock_t t1 = clock();
+    timer_get_time();
 
     for (int i = 0; i < REFRESH_RATE_TEST_CYCLES; i++)
         gfx_flip();
 
-    clock_t t2 = clock();
+    double delta = timer_get_time_delta();
 
-    gfx_mode_info.refresh_rate =
-        (double) CLOCKS_PER_SEC * REFRESH_RATE_TEST_CYCLES / (t2 - t1);
-
-    gfx_mode_info.vsync_supported = gfx_mode_info.refresh_rate < 100.0;
+    if (delta > REFRESH_RATE_TEST_CYCLES / 130) {
+        gfx_mode_info.refresh_rate = REFRESH_RATE_TEST_CYCLES / delta;
+        gfx_mode_info.vsync_supported = true;
+    } else {
+        gfx_mode_info.refresh_rate = -1;
+        gfx_mode_info.vsync_supported = false;
+    }
 }
 
 int gfx_init(int mode)

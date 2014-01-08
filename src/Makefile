@@ -3,10 +3,8 @@ LD = wlink
 
 RM = rm -f
 
-EXE = ducks.exe
-
 CFLAGS = -bt=dos -za99 -6r -mf -oahkl+tx -fo=$^*.obj
-LFLAGS = @ducks_c.lnk
+LFLAGS = system dos32x option map
 
 OBJS =  alloc.obj   &
         dpmi.obj    &
@@ -30,12 +28,15 @@ OBJS =  alloc.obj   &
 .c.obj: .autodepend
 	$(CC) $(CFLAGS) $<
 
-all: $(EXE) .symbolic
+ducks.exe: $(OBJS)
+	$(LD) $(LFLAGS) @$^*
 
-$(EXE): $(OBJS)
-	$(LD) $(LFLAGS)
+vbeinfo.exe: vbeinfo.obj dpmi.obj error.obj vbe.obj
+        $(LD) $(LFLAGS) @$^*
+
+all: ducks.exe vbeinfo.exe .symbolic
 
 clean: .symbolic
 	$(RM) *.obj
 	$(RM) *.map
-	$(RM) $(EXE)
+	$(RM) *.exe

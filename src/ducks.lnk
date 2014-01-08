@@ -1,5 +1,3 @@
-system  dos32x
-option  map
 name    ducks.exe
 file    alloc.obj
 file    dpmi.obj

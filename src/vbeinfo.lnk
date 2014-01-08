@@ -1,0 +1,5 @@
+name    vbeinfo.exe
+file    vbeinfo.obj
+file    dpmi.obj
+file    error.obj
+file    vbe.obj

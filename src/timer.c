@@ -55,10 +55,10 @@ int timer_init(double ticks_per_sec)
     timer.counter_init = (int) (PIT_BASE_FREQUENCY / ticks_per_sec + 0.5);
 
     if (timer.counter_init >= PIT_COUNTER_MAX) {
-        return error("Requested timer frequency of %.2d Hz too low;"
+        return error("Requested timer frequency of %.2f Hz too low;"
                      "minimum frequency is 18.2 Hz", ticks_per_sec);
     } else if (timer.counter_init < 1) {
-        return error("Requested timer frequency of %.2d Hz too high;"
+        return error("Requested timer frequency of %.2f Hz too high;"
                      "maximum frequency is 1.193181 MHz", ticks_per_sec);
     }
 

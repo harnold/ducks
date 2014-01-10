@@ -15,7 +15,7 @@
  * For today's CPUs and compilers, it's better to write simple counter-based
  * copy loops, and let the compiler's vectorizer do its job. */
 
-void *xmemcpy(void *dst, const void *src, size_t n)
+void *xmemcpy(void *restrict dst, const void *restrict src, size_t n)
 {
     const uint8_t *sp = (uint8_t *) src;
     uint8_t *dp = (uint8_t *) dst;

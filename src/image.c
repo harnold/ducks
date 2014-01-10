@@ -37,8 +37,9 @@ int load_image(const char *path, struct image *image)
         return error("File '%s' has no known image file format", path);
 }
 
-static void image_blit_copy(const uint8_t *src, int src_stride, int src_w, int src_h,
-                            uint8_t *dst, int dst_stride)
+static void image_blit_copy(const uint8_t *restrict src, int src_stride,
+                            int src_w, int src_h, uint8_t *restrict dst,
+                            int dst_stride)
 {
     for (int i = 0; i < src_h; i++) {
         xmemcpy(dst, src, src_w);
@@ -47,8 +48,9 @@ static void image_blit_copy(const uint8_t *src, int src_stride, int src_w, int s
     }
 }
 
-static void image_blit_mask(const uint8_t *src, int src_stride, int src_w, int src_h,
-                            uint8_t *dst, int dst_stride)
+static void image_blit_mask(const uint8_t *restrict src, int src_stride,
+                            int src_w, int src_h, uint8_t *restrict dst,
+                            int dst_stride)
 {
     int src_off = src_stride - src_w;
     int dst_off = dst_stride - src_w;
@@ -69,8 +71,9 @@ static void image_blit_mask(const uint8_t *src, int src_stride, int src_w, int s
     }
 }
 
-void image_blit(const struct image *src, int src_x, int src_y, int src_w, int src_h,
-                struct image *dst, int dst_x, int dst_y, unsigned flags)
+void image_blit(const struct image *restrict src, int src_x, int src_y,
+                int src_w, int src_h, struct image *restrict dst,
+                int dst_x, int dst_y, unsigned flags)
 {
     int src_stride = src->width;
     int dst_stride = dst->width;

@@ -17,7 +17,8 @@ struct image {
 void init_image(struct image *image, int width, int height, uint8_t *data);
 void destroy_image(struct image *image);
 int load_image(const char *path, struct image *image);
-void image_blit(const struct image *src, int src_x, int src_y, int src_w, int src_h,
-                struct image *dst, int dst_x, int dst_y, unsigned flags);
+void image_blit(const struct image *restrict src, int src_x, int src_y,
+                int src_w, int src_h, struct image *restrict dst,
+                int dst_x, int dst_y, unsigned flags);
 
 #endif

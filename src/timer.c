@@ -24,7 +24,7 @@ typedef void __interrupt (*timer_handler_t)();
 static struct {
     timer_handler_t default_handler;
     int counter_init;
-    double frequency;
+    float frequency;
     volatile unsigned int ticks;
     unsigned int last_ticks_value;
 } timer;
@@ -50,7 +50,7 @@ static void timer_handler_end(void) {}
 
 #pragma on (check_stack)
 
-int timer_init(double ticks_per_sec)
+int timer_init(float ticks_per_sec)
 {
     timer.counter_init = (int) (PIT_BASE_FREQUENCY / ticks_per_sec + 0.5);
 
@@ -116,7 +116,7 @@ void timer_exit(void)
         error(" Unlocking timer interrupt handler failed");
 }
 
-double timer_ticks_per_sec(void)
+float timer_ticks_per_sec(void)
 {
     return timer.frequency;
 }
@@ -134,13 +134,13 @@ unsigned int timer_get_ticks_delta(void)
     return delta;
 }
 
-double timer_get_time(void)
+float timer_get_time(void)
 {
     timer.last_ticks_value = timer.ticks;
     return timer.ticks / timer.frequency;
 }
 
-double timer_get_time_delta(void)
+float timer_get_time_delta(void)
 {
     unsigned int delta = timer.ticks - timer.last_ticks_value;
     timer.last_ticks_value = timer.ticks;

@@ -17,6 +17,8 @@ static inline struct elist_node *elist_begin(struct elist *list);
 static inline struct elist_node *elist_end(struct elist *list);
 static inline bool elist_empty(struct elist *list);
 static inline void elist_insert(struct elist_node *node, struct elist_node *next);
+static inline void elist_insert_front(struct elist_node *node, struct elist *list);
+static inline void elist_insert_back(struct elist_node *node, struct elist *list);
 static inline void elist_remove(struct elist_node *node);
 static inline void elist_move(struct elist_node *node, struct elist_node *next);
 static inline void elist_splice(struct elist_node *begin, struct elist_node *end,
@@ -81,6 +83,16 @@ static inline void elist_insert(struct elist_node *node, struct elist_node *next
 {
     elist_link(next->prev, node);
     elist_link(node, next);
+}
+
+static inline void elist_insert_front(struct elist_node *node, struct elist *list)
+{
+    elist_insert(node, elist_begin(list));
+}
+
+static inline void elist_insert_back(struct elist_node *node, struct elist *list)
+{
+    elist_insert(node, elist_end(list));
 }
 
 static inline void elist_remove(struct elist_node *node)

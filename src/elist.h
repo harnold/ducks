@@ -24,33 +24,33 @@ static inline void elist_move(struct elist_node *node, struct elist_node *next);
 static inline void elist_splice(struct elist_node *begin, struct elist_node *end,
                                 struct elist_node *next);
 
-#define elist_get(node, type, member) \
-    (type *) (((char *) (node)) - offsetof((type), (member)))
+#define elist_get(__node, __Type, __Member) \
+    ((__Type *) (((char *) (__node)) - offsetof(__Type, __Member)))
 
-#define elist_for_each_node(node, list) \
-    for ((node) = elist_begin(list); \
-         (node) != elist_end(list); \
-         (node) = (node)->next)
+#define elist_for_each_node(__node, __list) \
+    for ((__node) = elist_begin(__list); \
+         (__node) != elist_end(__list); \
+         (__node) = (__node)->next)
 
-#define elist_for_each_node_reverse(node, list) \
-    for ((node) = elist_end(list)->prev; \
-         (node) != elist_end(list); \
-         (node) = (node)->prev)
+#define elist_for_each_node_reverse(__node, __list) \
+    for ((__node) = elist_end(__list)->prev; \
+         (__node) != elist_end(__list); \
+         (__node) = (__node)->prev)
 
-#define elist_for_each_node_safe(node, tmp, list) \
-    for ((node) = elist_begin(list), (tmp) = (node)->next; \
-         (node) != elist_end(list); \
-         (node) = (tmp), (tmp) = (node)->next)
+#define elist_for_each_node_safe(__node, __tmp, __list) \
+    for ((__node) = elist_begin(__list), (__tmp) = (__node)->next; \
+         (__node) != elist_end(__list); \
+         (__node) = (__tmp), (__tmp) = (__node)->next)
 
-#define elist_for_each_elem(elem, list, type, member) \
-    for ((elem) = elist_get(elist_begin(list), (type), (member)); \
-         &(elem)->(member) != elist_end(list); \
-         (elem) = elist_get((elem)->(member).next, (type), (member)))
+#define elist_for_each_elem(__elem, __list, __Type, __Member) \
+    for ((__elem) = elist_get(elist_begin(__list), __Type, __Member); \
+         &(__elem)->__Member != elist_end(__list); \
+         (__elem) = elist_get((__elem)->__Member.next, __Type, __Member))
 
-#define elist_for_each_elem_reverse(elem, list, type, member) \
-    for ((elem) = elist_get(elist_end(list)->prev, (type), (member)); \
-         &(elem)->(member) != elist_end(list); \
-         (elem) = elist_get((elem)->(member).prev, (type), (member)))
+#define elist_for_each_elem_reverse(__elem, __list, __Type, __Member) \
+    for ((__elem) = elist_get(elist_end(__list)->prev, __Type, __Member); \
+         &(__elem)->__Member != elist_end(__list); \
+         (__elem) = elist_get((__elem)->__Member.prev, __Type, __Member))
 
 static inline void elist_link(struct elist_node *prev, struct elist_node *next)
 {

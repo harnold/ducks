@@ -145,3 +145,19 @@ float timer_get_time_delta(void)
     timer.last_ticks_value += delta;
     return delta / timer.ticks_per_sec;
 }
+
+void timer_sleep(float seconds)
+{
+    unsigned int end_of_sleep = timer.ticks + seconds * timer.ticks_per_sec;
+    while (timer.ticks < end_of_sleep) {
+        /* do nothing */
+    }
+}
+
+void timer_wait(float time)
+{
+    unsigned int end_of_sleep = time * timer.ticks_per_sec;
+    while (timer.ticks < end_of_sleep) {
+        /* do nothing */
+    }
+}

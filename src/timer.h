@@ -8,5 +8,7 @@ unsigned int timer_get_ticks(void);
 unsigned int timer_get_ticks_delta(void);
 float timer_get_time(void);
 float timer_get_time_delta(void);
+void timer_sleep(float seconds);
+void timer_wait(float time);
 
 #endif

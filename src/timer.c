@@ -23,7 +23,7 @@ typedef void __interrupt (*timer_handler_t)();
 static struct {
     timer_handler_t default_handler;
     int counter_init;
-    float frequency;
+    float ticks_per_sec;
     volatile unsigned int ticks;
     unsigned int last_ticks_value;
 } timer;
@@ -61,7 +61,7 @@ int timer_init(float ticks_per_sec)
                      "maximum frequency is 1.193181 MHz", ticks_per_sec);
     }
 
-    timer.frequency = PIT_BASE_FREQUENCY / timer.counter_init;
+    timer.ticks_per_sec = PIT_BASE_FREQUENCY / timer.counter_init;
     timer.ticks = 0;
     timer.last_ticks_value = 0;
 
@@ -117,7 +117,7 @@ void timer_exit(void)
 
 float timer_ticks_per_sec(void)
 {
-    return timer.frequency;
+    return timer.ticks_per_sec;
 }
 
 unsigned int timer_get_ticks(void)
@@ -136,12 +136,12 @@ unsigned int timer_get_ticks_delta(void)
 float timer_get_time(void)
 {
     timer.last_ticks_value = timer.ticks;
-    return timer.ticks / timer.frequency;
+    return timer.ticks / timer.ticks_per_sec;
 }
 
 float timer_get_time_delta(void)
 {
     unsigned int delta = timer.ticks - timer.last_ticks_value;
     timer.last_ticks_value = timer.ticks;
-    return delta / timer.frequency;
+    return delta / timer.ticks_per_sec;
 }

@@ -10,6 +10,7 @@
 #include <stdlib.h>
 
 #define REFRESH_RATE_TEST_CYCLES	30
+#define MAX_REFRESH_RATE                130.0f
 
 static struct gfx_mode_info gfx_mode_info;
 static int gfx_saved_vga_mode;
@@ -79,9 +80,9 @@ static void gfx_check_refresh_rate(void)
     for (int i = 0; i < REFRESH_RATE_TEST_CYCLES; i++)
         gfx_flip();
 
-    double delta = timer_get_time_delta();
+    float delta = timer_get_time_delta();
 
-    if (delta > REFRESH_RATE_TEST_CYCLES / 130) {
+    if (delta > REFRESH_RATE_TEST_CYCLES / MAX_REFRESH_RATE) {
         gfx_mode_info.refresh_rate = REFRESH_RATE_TEST_CYCLES / delta;
         gfx_mode_info.vsync_supported = true;
     } else {

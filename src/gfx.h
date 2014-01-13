@@ -15,7 +15,7 @@ struct gfx_mode_info {
     int x_resolution;
     int y_resolution;
     size_t page_size;
-    double refresh_rate;
+    float refresh_rate;
     bool vsync_supported:1;
 };
 

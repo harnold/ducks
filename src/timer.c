@@ -123,25 +123,25 @@ float timer_ticks_per_sec(void)
 unsigned int timer_get_ticks(void)
 {
     timer.last_ticks_value = timer.ticks;
-    return timer.ticks;
+    return timer.last_ticks_value;
 }
 
 unsigned int timer_get_ticks_delta(void)
 {
     unsigned int delta = timer.ticks - timer.last_ticks_value;
-    timer.last_ticks_value = timer.ticks;
+    timer.last_ticks_value += delta;
     return delta;
 }
 
 float timer_get_time(void)
 {
     timer.last_ticks_value = timer.ticks;
-    return timer.ticks / timer.ticks_per_sec;
+    return timer.last_ticks_value / timer.ticks_per_sec;
 }
 
 float timer_get_time_delta(void)
 {
     unsigned int delta = timer.ticks - timer.last_ticks_value;
-    timer.last_ticks_value = timer.ticks;
+    timer.last_ticks_value += delta;
     return delta / timer.ticks_per_sec;
 }

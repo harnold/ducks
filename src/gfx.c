@@ -75,19 +75,39 @@ static int gfx_check_vbe_mode_info(struct vbe_info *info, int mode,
 
 static void gfx_check_refresh_rate(void)
 {
+    float delta;
+
     timer_get_time();
 
     for (int i = 0; i < REFRESH_RATE_TEST_CYCLES; i++)
         gfx_flip();
 
-    float delta = timer_get_time_delta();
+    delta = timer_get_time_delta();
 
     if (delta > REFRESH_RATE_TEST_CYCLES / MAX_REFRESH_RATE) {
         gfx_mode_info.refresh_rate = REFRESH_RATE_TEST_CYCLES / delta;
         gfx_mode_info.vsync_supported = true;
+        gfx_mode_info.vsync_requires_vga_wait = false;
+        return;
+    }
+
+    timer_get_time();
+
+    for (int i = 0; i < REFRESH_RATE_TEST_CYCLES; i++) {
+        vga_wait_for_retrace();
+        gfx_flip();
+    }
+
+    delta = timer_get_time_delta();
+
+    if (delta > REFRESH_RATE_TEST_CYCLES / MAX_REFRESH_RATE) {
+        gfx_mode_info.refresh_rate = REFRESH_RATE_TEST_CYCLES / delta;
+        gfx_mode_info.vsync_supported = true;
+        gfx_mode_info.vsync_requires_vga_wait = true;
     } else {
         gfx_mode_info.refresh_rate = -1;
         gfx_mode_info.vsync_supported = false;
+        gfx_mode_info.vsync_requires_vga_wait = false;
     }
 }
 
@@ -237,15 +257,25 @@ bool gfx_clip(int *x, int *y, int *w, int *h)
 
 void gfx_flip(void)
 {
+    int scanline;
+
     if (gfx_front_buffer == &gfx_buffer_1) {
-        vbe_set_display_start(0, gfx_mode_info.y_resolution, VBE_WAIT_FOR_RETRACE);
+        scanline = gfx_mode_info.y_resolution;
         gfx_front_buffer = &gfx_buffer_2;
         gfx_back_buffer = &gfx_buffer_1;
     } else {
-        vbe_set_display_start(0, 0, VBE_WAIT_FOR_RETRACE);
+        scanline = 0;
         gfx_front_buffer = &gfx_buffer_1;
         gfx_back_buffer = &gfx_buffer_2;
     }
+
+    if (gfx_mode_info.vsync_requires_vga_wait) {
+        vga_wait_for_retrace();
+        vbe_set_display_start(0, scanline, VBE_IGNORE_RETRACE);
+    } else {
+        vbe_set_display_start(0, scanline, VBE_WAIT_FOR_RETRACE);
+    }
+
 }
 
 void gfx_draw_image_section(const struct image *src, int src_x, int src_y,

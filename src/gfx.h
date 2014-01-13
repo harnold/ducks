@@ -17,6 +17,7 @@ struct gfx_mode_info {
     size_t page_size;
     float refresh_rate;
     bool vsync_supported:1;
+    bool vsync_requires_vga_wait:1;
 };
 
 int gfx_init(int mode);

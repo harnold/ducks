@@ -26,7 +26,7 @@ void *_allocate_entry(struct allocator *alloc);
 void _free_entry(struct allocator *alloc, void *entry);
 void _free_all(struct allocator *alloc);
 
-#define ALLOC_DEFAULT_BLOB_SIZE         4096
+#define ALLOC_DEFAULT_BLOB_SIZE         1000
 
 #define _alloc_min_align(type) \
     (alignof(type) < alignof(void *) ? alignof(void *) : alignof(type))

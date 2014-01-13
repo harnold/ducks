@@ -1,5 +1,4 @@
 #include "timer.h"
-#include "atomic.h"
 #include "dpmi.h"
 #include "error.h"
 
@@ -78,7 +77,7 @@ int timer_init(float ticks_per_sec)
 
     timer.default_handler = _dos_getvect(PIT_SYSTEM_INT);
 
-    disable_interrupts();
+    _disable();
 
     /* Set channel 0 to rate generator mode, <ticks_per_sec> Hz. */
 
@@ -88,14 +87,14 @@ int timer_init(float ticks_per_sec)
 
     _dos_setvect(PIT_SYSTEM_INT, timer_handler);
 
-    enable_interrupts();
+    _enable();
 
     return 0;
 }
 
 void timer_exit(void)
 {
-    disable_interrupts();
+    _disable();
 
     /* Reset channel 0 to square wave mode, 18.2 Hz. */
 
@@ -105,7 +104,7 @@ void timer_exit(void)
 
     _dos_setvect(PIT_SYSTEM_INT, timer.default_handler);
 
-    enable_interrupts();
+    _enable();
 
     if (dpmi_unlock_linear_region((uint32_t) &timer, sizeof(timer)) != 0)
         error("Unlocking timer data failed");

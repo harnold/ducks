@@ -51,7 +51,7 @@ static void timer_handler_end(void) {}
 
 int timer_init(float ticks_per_sec)
 {
-    timer.counter_init = (int) (PIT_BASE_FREQUENCY / ticks_per_sec + 0.5);
+    timer.counter_init = (int) (PIT_BASE_FREQUENCY / ticks_per_sec);
 
     if (timer.counter_init >= PIT_COUNTER_MAX) {
         return error("Requested timer frequency of %.2f Hz too low;"

@@ -34,20 +34,20 @@ static inline void list_move_front(struct list_node *node, struct list *list);
 static inline void list_move_back(struct list_node *node, struct list *list);
 struct list_node *list_find(void *ptr, struct list *list);
 
-#define list_for_each_node(node, list) \
-    for ((node) = list_begin(list); \
-         (node) != list_end(list); \
-         (node) = (node)->next)
+#define list_for_each_node(__node, __list) \
+    for ((__node) = list_begin(__list); \
+         (__node) != list_end(__list); \
+         (__node) = (__node)->next)
 
-#define list_for_each_node_safe(node, tmp, list) \
-    for ((node) = list_begin(list), (tmp) = (node)->next; \
-         (node) != list_end(list); \
-         (node) = (tmp), (tmp) = (node)->next)
+#define list_for_each_node_safe(__node, tmp, __list) \
+    for ((__node) = list_begin(__list), (tmp) = (__node)->next; \
+         (__node) != list_end(__list); \
+         (__node) = (tmp), (tmp) = (__node)->next)
 
-#define list_for_each_node_reverse(node, list) \
-    for ((node) = list_end(list)->prev; \
-         (node) != list_end(list); \
-         (node) = (node)->prev)
+#define list_for_each_node_reverse(__node, __list) \
+    for ((__node) = list_end(__list)->prev; \
+         (__node) != list_end(__list); \
+         (__node) = (__node)->prev)
 
 static inline void init_list(struct list *list)
 {

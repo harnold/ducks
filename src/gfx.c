@@ -278,12 +278,12 @@ void gfx_flip(void)
 
 }
 
-void gfx_draw_image_section(const struct image *src, int src_x, int src_y,
+void gfx_draw_image_section(const struct image *image, int src_x, int src_y,
                             int src_w, int src_h, int dst_x, int dst_y,
                             unsigned flags)
 {
     if ((flags & GFX_NO_CLIPPING) == 1) {
-        image_blit(src, src_x, src_y, src_w, src_h,
+        image_blit(image, src_x, src_y, src_w, src_h,
                    gfx_back_buffer, dst_x, dst_y, flags & IMAGE_BLIT_MASK);
     } else {
         int cx = dst_x;
@@ -294,12 +294,12 @@ void gfx_draw_image_section(const struct image *src, int src_x, int src_y,
         if (!gfx_clip(&cx, &cy, &cw, &ch))
             return;
 
-        image_blit(src, src_x + (cx - dst_x), src_y + (cy - dst_y), cw, ch,
+        image_blit(image, src_x + (cx - dst_x), src_y + (cy - dst_y), cw, ch,
                    gfx_back_buffer, dst_x, dst_y, flags & IMAGE_BLIT_MASK);
     }
 }
 
-void gfx_draw_image(const struct image *src, int dst_x, int dst_y, unsigned flags)
+void gfx_draw_image(const struct image *image, int x, int y, unsigned flags)
 {
-    gfx_draw_image_section(src, 0, 0, src->width, src->height, dst_x, dst_y, flags);
+    gfx_draw_image_section(image, 0, 0, image->width, image->height, x, y, flags);
 }

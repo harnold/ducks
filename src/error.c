@@ -20,6 +20,15 @@ static void vprinterr(const char *prefix, int errnum, const char *format,
         fprintf(stderr, "%s%s\n", prefix, msg);
 }
 
+void log(const char *format, ...)
+{
+    va_list args;
+
+    va_start(args, format);
+    vprinterr("Log: ", 0, format, args);
+    va_end(args);
+}
+
 void warning(const char *format, ...)
 {
     va_list args;

@@ -2,9 +2,10 @@
 
 #include <errno.h>
 #include <stdarg.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+
+static FILE *error_log_file;
 
 static void vprinterr(const char *prefix, int errnum, const char *format,
                       va_list args)
@@ -14,10 +15,22 @@ static void vprinterr(const char *prefix, int errnum, const char *format,
     vsnprintf(msg, sizeof(msg), format, args);
     fflush(stdout);
 
-    if (errnum != 0)
-        fprintf(stderr, "%s%s: %s\n", prefix, msg, strerror(errnum));
+    FILE *log_file;
+
+    if (error_log_file != NULL)
+        log_file = error_log_file;
     else
-        fprintf(stderr, "%s%s\n", prefix, msg);
+        log_file = stderr;
+
+    if (errnum != 0)
+        fprintf(log_file, "%s%s: %s\n", prefix, msg, strerror(errnum));
+    else
+        fprintf(log_file, "%s%s\n", prefix, msg);
+}
+
+void error_set_log_file(FILE *file)
+{
+    error_log_file = file;
 }
 
 void log(const char *format, ...)

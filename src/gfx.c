@@ -6,11 +6,14 @@
 #include "vbe.h"
 #include "vga.h"
 
+#include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
 
 #define REFRESH_RATE_TEST_CYCLES	30
 #define MAX_REFRESH_RATE                130.0f
+
+static bool gfx_initialized;
 
 static struct gfx_mode_info gfx_mode_info;
 static int gfx_saved_vga_mode;
@@ -169,29 +172,30 @@ int gfx_init(int mode)
     gfx_check_refresh_rate();
     gfx_reset_clip_rect();
 
+    gfx_initialized = true;
     return 0;
 
 failure:
 
-    if (gfx_framebuffer_address != 0) {
-        if (dpmi_unmap_physical_address(gfx_framebuffer_address) != 0)
-            error("Unmapping graphics card framebuffer failed");
-    }
-
-    if (gfx_mode_info.mode != gfx_saved_vga_mode)
-        vga_set_mode(gfx_saved_vga_mode);
-
+    gfx_exit();
     return -1;
 }
 
 void gfx_exit(void)
 {
-    vga_set_mode(gfx_saved_vga_mode);
+    if (!gfx_initialized)
+        return;
 
-    if (dpmi_unmap_physical_address(gfx_framebuffer_address) != 0)
-        error("Unmapping graphics card framebuffer failed");
+    if (gfx_mode_info.mode != gfx_saved_vga_mode)
+        vga_set_mode(gfx_saved_vga_mode);
 
-    gfx_framebuffer_address = 0;
+    if (gfx_framebuffer_address != 0) {
+        if (dpmi_unmap_physical_address(gfx_framebuffer_address) != 0)
+            error("Unmapping graphics card framebuffer failed");
+        gfx_framebuffer_address = 0;
+    }
+
+    gfx_initialized = false;
 }
 
 void gfx_get_mode_info(struct gfx_mode_info *info)

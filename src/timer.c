@@ -4,6 +4,7 @@
 
 #include <conio.h>
 #include <dos.h>
+#include <stdbool.h>
 
 #define PIT_SYSTEM_INT      0x08
 #define PIT_USER_INT        0x1C
@@ -19,6 +20,8 @@
 #define PIC_EOI             0x20
 
 typedef void __interrupt (*timer_handler_t)();
+
+static timer_initialized;
 
 static struct {
     timer_handler_t default_handler;
@@ -89,11 +92,15 @@ int timer_init(float ticks_per_sec)
 
     _enable();
 
+    timer_initialized = true;
     return 0;
 }
 
 void timer_exit(void)
 {
+    if (!timer_initialized)
+        return;
+
     _disable();
 
     /* Reset channel 0 to square wave mode, 18.2 Hz. */

@@ -13,8 +13,6 @@
 #define REFRESH_RATE_TEST_CYCLES	30
 #define MAX_REFRESH_RATE                130.0f
 
-static bool gfx_initialized;
-
 static struct gfx_mode_info gfx_mode_info;
 static int gfx_saved_vga_mode;
 
@@ -172,7 +170,6 @@ int gfx_init(int mode)
     gfx_check_refresh_rate();
     gfx_reset_clip_rect();
 
-    gfx_initialized = true;
     return 0;
 
 failure:
@@ -183,19 +180,16 @@ failure:
 
 void gfx_exit(void)
 {
-    if (!gfx_initialized)
-        return;
-
-    if (gfx_mode_info.mode != gfx_saved_vga_mode)
+    if (gfx_mode_info.mode != gfx_saved_vga_mode) {
         vga_set_mode(gfx_saved_vga_mode);
+        gfx_mode_info.mode = gfx_saved_vga_mode;
+    }
 
     if (gfx_framebuffer_address != 0) {
         if (dpmi_unmap_physical_address(gfx_framebuffer_address) != 0)
             error("Unmapping graphics card framebuffer failed");
         gfx_framebuffer_address = 0;
     }
-
-    gfx_initialized = false;
 }
 
 void gfx_get_mode_info(struct gfx_mode_info *info)

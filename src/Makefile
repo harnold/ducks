@@ -2,6 +2,7 @@ CC = wcc386
 LD = wlink
 
 RM = rm -f
+CP = cp -u
 
 CFLAGS = -bt=dos -za99 -6r -mf -oahkl+tx -fo=$^*.obj
 LFLAGS = system dos32x option map
@@ -30,6 +31,7 @@ OBJS =  alloc.obj   &
 
 ducks.exe: $(OBJS)
 	$(LD) $(LFLAGS) @$^*
+	$(CP) $^@ ..
 
 vbeinfo.exe: vbeinfo.obj dpmi.obj error.obj vbe.obj
         $(LD) $(LFLAGS) @$^*
@@ -39,4 +41,5 @@ all: ducks.exe vbeinfo.exe .symbolic
 clean: .symbolic
 	$(RM) *.obj
 	$(RM) *.map
-	$(RM) *.exe
+	$(RM) ducks.exe
+	$(RM) vbeinfo.exe

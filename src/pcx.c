@@ -33,7 +33,7 @@
 
 static inline unsigned int read_le16(uint8_t *p)
 {
-    return ((unsigned int) p[0] << 8) & p[1];
+    return ((unsigned int) p[1] << 8) | p[0];
 }
 
 int pcx_load_palette(const char *path, struct palette *palette)
@@ -89,8 +89,8 @@ int pcx_load_image(const char *path, struct image *image)
         goto failure;
     }
 
-    int width = read_le16(header + PCX_X2) - read_le16(header + PCX_X1);
-    int height = read_le16(header + PCX_Y2) - read_le16(header + PCX_Y2);
+    int width = read_le16(header + PCX_X2) - read_le16(header + PCX_X1) + 1;
+    int height = read_le16(header + PCX_Y2) - read_le16(header + PCX_Y1) + 1;
     int size = width * height;
 
     data = xmalloc(size);

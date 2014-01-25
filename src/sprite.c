@@ -5,12 +5,15 @@
 DEFINE_ALLOCATOR(sprite, struct sprite, ALLOC_DEFAULT_BLOB_SIZE);
 
 void init_sprite_class(struct sprite_class *class, struct image *image,
-                      int width, int height, int num_frames)
+                      int width, int height, int num_frames,
+                      float origin_x, float origin_y)
 {
     class->image = image;
     class->width = width;
     class->height = height;
     class->num_frames = num_frames;
+    class->origin_x = origin_x;
+    class->origin_y = origin_y;
 }
 
 void init_sprite(struct sprite *sprite, const struct sprite_class *class,

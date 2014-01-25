@@ -28,6 +28,8 @@ struct sprite_class {
     int width;
     int height;
     int num_frames;
+    float origin_x;
+    float origin_y;
 };
 
 struct sprite {
@@ -35,6 +37,8 @@ struct sprite {
     int width;
     int height;
     int num_frames;
+    float origin_x;
+    float origin_y;
     float x;
     float y;
     float v_x;
@@ -55,7 +59,8 @@ DECLARE_ALLOCATOR(sprite, struct sprite);
     elist_get(__node, struct sprite, link)
 
 void init_sprite_class(struct sprite_class *class, struct image *image,
-                       int width, int height, int num_frames);
+                       int width, int height, int num_frames,
+                       float origin_x, float origin_y);
 void init_sprite(struct sprite *sprite, const struct sprite_class *class,
                  float x, float y, float v_x, float v_y, int z, int frame,
                  const struct animation *anim);

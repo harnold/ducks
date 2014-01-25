@@ -1,4 +1,5 @@
 #include "error.h"
+#include "game.h"
 #include "gfx.h"
 #include "timer.h"
 #include "vbe.h"
@@ -10,6 +11,7 @@
 
 static void cleanup(void)
 {
+    game_exit();
     gfx_exit();
     timer_exit();
 }
@@ -29,6 +31,13 @@ int main(void)
         error("Initializing graphics failed");
         goto failure;
     }
+
+    if (game_init() != 0) {
+        error("Initializing game failed");
+        goto failure;
+    }
+
+    game_run();
 
     cleanup();
 

@@ -9,6 +9,7 @@ file    main.obj
 file    mouse.obj
 file    palette.obj
 file    pcx.obj
+file    res.obj
 file    scene.obj
 file    sprite.obj
 file    timer.obj

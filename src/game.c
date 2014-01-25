@@ -1,4 +1,5 @@
 #include "game.h"
+#include "res.h"
 
 #include <conio.h>
 #include <stdbool.h>
@@ -8,11 +9,20 @@
 
 int game_init(void)
 {
+    if (res_load_palettes() != 0)
+        return -1;
+
+    if (res_load_images() != 0) {
+        res_destroy_images();
+        return -1;
+    }
+
     return 0;
 }
 
 void game_exit(void)
 {
+    res_destroy_images();
 }
 
 void game_run(void)

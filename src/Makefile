@@ -17,6 +17,7 @@ OBJS =  alloc.obj   &
         mouse.obj   &
         palette.obj &
         pcx.obj     &
+        sprite.obj  &
         timer.obj   &
         vbe.obj     &
         vga.obj     &

@@ -1,5 +1,7 @@
 #include "error.h"
+#include "gfx.h"
 #include "timer.h"
+#include "vbe.h"
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -8,6 +10,7 @@
 
 static void cleanup(void)
 {
+    gfx_exit();
     timer_exit();
 }
 
@@ -19,6 +22,11 @@ int main(void)
 
     if (timer_init(GAME_TIMER_HZ) != 0) {
         error("Initializing timer failed");
+        goto failure;
+    }
+
+    if (gfx_init(VBE_MODE_800x600_256) != 0) {
+        error("Initializing graphics failed");
         goto failure;
     }
 

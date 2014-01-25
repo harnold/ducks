@@ -2,6 +2,7 @@
 #include "dpmi.h"
 #include "error.h"
 #include "image.h"
+#include "sprite.h"
 #include "timer.h"
 #include "vbe.h"
 #include "vga.h"
@@ -300,4 +301,12 @@ void gfx_draw_image_section(const struct image *image, int src_x, int src_y,
 void gfx_draw_image(const struct image *image, int x, int y, unsigned flags)
 {
     gfx_draw_image_section(image, 0, 0, image->width, image->height, x, y, flags);
+}
+
+void gfx_draw_sprite(const struct sprite *sprite, unsigned flags)
+{
+    gfx_draw_image_section(sprite->image, 0, sprite->frame * sprite->height,
+                           sprite->width, sprite->height,
+                           (int) (sprite->x + 0.5), (int) (sprite->y + 0.5),
+                           flags);
 }

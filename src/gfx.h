@@ -9,6 +9,7 @@ enum gfx_flags {
 };
 
 struct image;
+struct sprite;
 
 struct gfx_mode_info {
     int mode;
@@ -31,5 +32,6 @@ void gfx_draw_image_section(const struct image *image, int src_x, int src_y,
                             int src_w, int src_h, int dst_x, int dst_y,
                             unsigned flags);
 void gfx_draw_image(const struct image *image, int x, int y, unsigned flags);
+void gfx_draw_sprite(const struct sprite *sprite, unsigned flags);
 
 #endif

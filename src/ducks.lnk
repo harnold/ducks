@@ -2,6 +2,7 @@ name    ducks.exe
 file    alloc.obj
 file    dpmi.obj
 file    error.obj
+file    game.obj
 file    gfx.obj
 file    image.obj
 file    list.obj

@@ -1,4 +1,5 @@
 #include "gfx.h"
+#include "bits.h"
 #include "dpmi.h"
 #include "error.h"
 #include "image.h"
@@ -37,7 +38,7 @@ static int gfx_check_vbe_info(struct vbe_info *info)
         return error("VBE 2.0 required but driver supports only version %d.%d",
                      info->vbe_version >> 8, info->vbe_version & 0xFF);
 
-    if ((info->capabilities & VBE_NO_VGA_CONTROLLER) != 0)
+    if (test_bit(info->capabilities, VBE_NO_VGA_CONTROLLER))
         return error("Graphics card not VGA compatible");
 
     return 0;
@@ -60,13 +61,13 @@ static int gfx_check_vbe_mode_info(struct vbe_info *info, int mode,
     if (vbe_get_mode_info(mode, mode_info) != 0)
         return error("Obtaining mode information for VBE mode %4X failed", mode);
 
-    if ((mode_info->mode_attributes & VBE_MODE_SUPPORTED_BY_HARDWARE) == 0)
+    if (!test_bit(mode_info->mode_attributes, VBE_MODE_SUPPORTED_BY_HARDWARE))
         return error("VBE mode %Xh not supported by hardware configuration", mode);
 
-    if ((mode_info->mode_attributes & VBE_MODE_NOT_VGA_COMPATIBLE) != 0)
+    if (test_bit(mode_info->mode_attributes, VBE_MODE_NOT_VGA_COMPATIBLE))
         return error("VBE mode %Xh not VGA compatible", mode);
 
-    if ((mode_info->mode_attributes & VBE_LINEAR_FRAMEBUFFER_SUPPORTED) == 0)
+    if (!test_bit(mode_info->mode_attributes, VBE_LINEAR_FRAMEBUFFER_SUPPORTED))
         return error("Linear framebuffer not supported in VBE mode %Xh", mode);
 
     if (mode_info->number_of_image_pages < 1)
@@ -289,7 +290,7 @@ void gfx_draw_image_section(const struct image *image, int src_x, int src_y,
                             int src_w, int src_h, int dst_x, int dst_y,
                             unsigned flags)
 {
-    if ((flags & GFX_NO_CLIPPING) != 0) {
+    if (test_bit(flags, GFX_NO_CLIPPING)) {
         image_blit(image, src_x, src_y, src_w, src_h,
                    gfx_back_buffer, dst_x, dst_y, flags & IMAGE_BLIT_MASK);
     } else {

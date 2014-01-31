@@ -2,6 +2,7 @@
 #include "error.h"
 
 #include <i86.h>
+#include <stdint.h>
 #include <string.h>
 
 #define MOUSE_INT       0x33
@@ -47,6 +48,6 @@ void mouse_get_delta(int *dx, int *dy)
     memset(&regs, 0, sizeof(regs));
     regs.w.ax = 0x0B;
     int386(MOUSE_INT, &regs, &regs);
-    *dx = regs.w.cx;
-    *dy = regs.w.dx;
+    *dx = (int16_t) regs.w.cx;
+    *dy = (int16_t) regs.w.dx;
 }

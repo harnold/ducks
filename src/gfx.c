@@ -289,7 +289,7 @@ void gfx_draw_image_section(const struct image *image, int src_x, int src_y,
                             int src_w, int src_h, int dst_x, int dst_y,
                             unsigned flags)
 {
-    if ((flags & GFX_NO_CLIPPING) == 1) {
+    if ((flags & GFX_NO_CLIPPING) != 0) {
         image_blit(image, src_x, src_y, src_w, src_h,
                    gfx_back_buffer, dst_x, dst_y, flags & IMAGE_BLIT_MASK);
     } else {

@@ -9,7 +9,6 @@
 struct image;
 
 enum animation_type {
-    ANIM_NONE,
     ANIM_ROTATE_FORWARD,
     ANIM_ROTATE_BACKWARD,
     ANIM_ONCE_FORWARD,

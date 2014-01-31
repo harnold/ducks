@@ -38,7 +38,7 @@ void sprite_update(struct sprite *sprite, float t, float dt)
 
     const struct animation *anim = sprite->anim;
 
-    if (anim->type == ANIM_NONE)
+    if (anim == NULL)
         return;
 
     int nframe = (int) ((t - sprite->anim_start_time) * anim->fps);

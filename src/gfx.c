@@ -302,8 +302,11 @@ void gfx_draw_image_section(const struct image *image, int src_x, int src_y,
         if (!gfx_clip(&cx, &cy, &cw, &ch))
             return;
 
-        image_blit(image, src_x + (cx - dst_x), src_y + (cy - dst_y), cw, ch,
-                   gfx_back_buffer, dst_x, dst_y, flags & IMAGE_BLIT_MASK);
+        int dx = (cx - dst_x);
+        int dy = (cy - dst_y);
+
+        image_blit(image, src_x + dx, src_y + dy, cw, ch, gfx_back_buffer,
+                   dst_x + dx, dst_y + dy, flags & IMAGE_BLIT_MASK);
     }
 }
 

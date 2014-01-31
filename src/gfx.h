@@ -24,6 +24,7 @@ struct gfx_mode_info {
 int gfx_init(int mode);
 void gfx_exit(void);
 void gfx_get_mode_info(struct gfx_mode_info *info);
+void gfx_get_clip_rect(int *x, int *y, int *w, int *h);
 void gfx_set_clip_rect(int x, int y, int w, int h);
 void gfx_reset_clip_rect(void);
 bool gfx_clip(int *x, int *y, int *w, int *h);

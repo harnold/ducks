@@ -198,6 +198,14 @@ void gfx_get_mode_info(struct gfx_mode_info *info)
     *info = gfx_mode_info;
 }
 
+void gfx_get_clip_rect(int *x, int *y, int *w, int *h)
+{
+    *x = gfx_clip_x;
+    *y = gfx_clip_y;
+    *w = gfx_clip_w;
+    *h = gfx_clip_h;
+}
+
 void gfx_set_clip_rect(int x, int y, int w, int h)
 {
     gfx_clip_x = x;

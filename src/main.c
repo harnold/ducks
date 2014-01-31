@@ -1,6 +1,7 @@
 #include "error.h"
 #include "game.h"
 #include "gfx.h"
+#include "mouse.h"
 #include "timer.h"
 #include "vbe.h"
 
@@ -14,6 +15,7 @@ static void cleanup(void)
     game_exit();
     gfx_exit();
     timer_exit();
+    mouse_exit();
 }
 
 int main(void)
@@ -21,6 +23,11 @@ int main(void)
     error_set_log_file(stdout);
 
     atexit(cleanup);
+
+    if (mouse_init() != 0) {
+        error("Initializing mouse failed");
+        goto failure;
+    }
 
     if (timer_init(GAME_TIMER_HZ) != 0) {
         error("Initializing timer failed");

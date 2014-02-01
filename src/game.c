@@ -25,6 +25,10 @@ static const struct sprite_class pointer_class = {
     &pointer_image, 80, 80, 1, 40.0f, 40.0f
 };
 
+static const struct sprite_class digit_class = {
+    &numbers_image, 32, 32, 1, 0.0f, 0.0f
+};
+
 static struct scene game_scene;
 static struct sprite pointer_sprite;
 
@@ -46,6 +50,13 @@ static unsigned update_pointer(void)
         confine_float(pointer_sprite.y + dy, 0, gfx_mode_info.y_resolution);
 
     return buttons;
+}
+
+static void update_number_display(struct sprite sprites[], int num_digits,
+                                  unsigned int value)
+{
+    for (int i = num_digits - 1, shifter = 1; i >= 0; i--, shifter *= 10)
+        sprites[i].frame = (value / shifter) % 10;
 }
 
 int game_init(void)

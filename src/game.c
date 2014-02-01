@@ -24,11 +24,6 @@ static const struct sprite_class pointer_class = {
 static struct scene game_scene;
 static struct sprite pointer_sprite;
 
-static inline int confine_int(int x, int min, int max)
-{
-    return (x < min) ? min : (x > max) ? max : x;
-}
-
 static inline float confine_float(float x, float min, float max)
 {
     return (x < min) ? min : (x > max) ? max : x;

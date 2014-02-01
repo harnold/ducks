@@ -20,6 +20,11 @@
 #define TIMER_X_POS             32
 #define TIMER_Y_POS             8
 
+#define SCORE_DIGITS            5
+#define SCORE_LAYER             0
+#define SCORE_X_POS             608
+#define SCORE_Y_POS             8
+
 #define POINTER_LAYER           1
 
 #define GAME_TIMEOUT            90
@@ -39,6 +44,9 @@ static struct sprite pointer_sprite;
 
 static int timer;
 static struct sprite timer_sprites[TIMER_DIGITS];
+
+static int score;
+static struct sprite score_sprites[SCORE_DIGITS];
 
 static inline float confine_float(float x, float min, float max)
 {
@@ -98,6 +106,16 @@ int game_init(void)
                     world_to_screen_y(TIMER_Y_POS),
                     0.0f, 0.0f, TIMER_LAYER, 0, NULL);
         scene_add_sprite(&game_scene, &timer_sprites[i]);
+    }
+
+    score = 0;
+
+    for (int i = 0; i < SCORE_DIGITS; i++) {
+        init_sprite(&score_sprites[i], &digit_class,
+                    world_to_screen_x(SCORE_X_POS + i * digit_class.width),
+                    world_to_screen_y(SCORE_Y_POS),
+                    0.0f, 0.0f, SCORE_LAYER, 0, NULL);
+        scene_add_sprite(&game_scene, &score_sprites[i]);
     }
 
     return 0;

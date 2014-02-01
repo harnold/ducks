@@ -17,6 +17,8 @@
 
 #define POINTER_LAYER           1
 
+#define GAME_TIMEOUT            90
+
 struct gfx_mode_info gfx_mode_info;
 
 static const struct sprite_class pointer_class = {
@@ -82,8 +84,9 @@ void game_run(void)
 {
     bool quit = false;
 
-    float time = timer_get_time();
-    float dt = time;
+    const float start_time = timer_get_time();
+    float time = start_time;
+    float elapsed_time = 0;
 
     while (!quit) {
 
@@ -94,8 +97,12 @@ void game_run(void)
 
         update_pointer();
 
-        dt = timer_get_time_delta();
+        float dt = timer_get_time_delta();
         time += dt;
+        elapsed_time += dt;
+
+        if ((int) elapsed_time > GAME_TIMEOUT)
+            break;
 
         scene_update(&game_scene, time, dt);
         scene_draw(&game_scene);

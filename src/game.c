@@ -15,6 +15,11 @@
 
 #define KEY_ESC                 27
 
+#define TIMER_DIGITS            2
+#define TIMER_LAYER             0
+#define TIMER_X_POS             32
+#define TIMER_Y_POS             8
+
 #define POINTER_LAYER           1
 
 #define GAME_TIMEOUT            90
@@ -31,6 +36,9 @@ static const struct sprite_class digit_class = {
 
 static struct scene game_scene;
 static struct sprite pointer_sprite;
+
+static int timer;
+static struct sprite timer_sprites[TIMER_DIGITS];
 
 static inline float confine_float(float x, float min, float max)
 {
@@ -82,6 +90,16 @@ int game_init(void)
 
     scene_add_sprite(&game_scene, &pointer_sprite);
 
+    timer = 0;
+
+    for (int i = 0; i < TIMER_DIGITS; i++) {
+        init_sprite(&timer_sprites[i], &digit_class,
+                    world_to_screen_x(TIMER_X_POS + i * digit_class.width),
+                    world_to_screen_y(TIMER_Y_POS),
+                    0.0f, 0.0f, TIMER_LAYER, 0, NULL);
+        scene_add_sprite(&game_scene, &timer_sprites[i]);
+    }
+
     return 0;
 }
 
@@ -114,6 +132,9 @@ void game_run(void)
 
         if ((int) elapsed_time > GAME_TIMEOUT)
             break;
+
+        update_number_display(timer_sprites, TIMER_DIGITS,
+                              GAME_TIMEOUT - (int) elapsed_time);
 
         scene_update(&game_scene, time, dt);
         scene_draw(&game_scene);

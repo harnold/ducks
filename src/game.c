@@ -29,7 +29,7 @@ static inline float confine_float(float x, float min, float max)
     return (x < min) ? min : (x > max) ? max : x;
 }
 
-static unsigned update_mouse(void)
+static unsigned update_pointer(void)
 {
     unsigned buttons;
     int dx, dy;
@@ -90,7 +90,7 @@ void game_run(void)
             quit = 1;
         }
 
-        update_mouse();
+        update_pointer();
 
         dt = timer_get_time_delta();
         time += dt;

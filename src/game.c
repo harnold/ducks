@@ -13,7 +13,9 @@
 #include <conio.h>
 #include <stdbool.h>
 
-#define KEY_ESC         27
+#define KEY_ESC                 27
+
+#define POINTER_LAYER           1
 
 struct gfx_mode_info gfx_mode_info;
 
@@ -63,7 +65,7 @@ int game_init(void)
     init_sprite(&pointer_sprite, &pointer_class,
                 world_to_screen_x((WORLD_MAX_X - WORLD_MIN_X) / 2),
                 world_to_screen_y((WORLD_MAX_Y - WORLD_MIN_Y) / 2),
-                0.0f, 0.0f, 0, 0, NULL);
+                0.0f, 0.0f, POINTER_LAYER, 0, NULL);
 
     scene_add_sprite(&game_scene, &pointer_sprite);
 

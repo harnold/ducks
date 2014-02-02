@@ -3,6 +3,7 @@
 
 #include <assert.h>
 #include <stdint.h>
+#include <stdlib.h>
 
 #define array_length(a)         (sizeof(a) / sizeof((a)[0]))
 
@@ -16,6 +17,8 @@ static inline char *stpcpy(char *dst, const char *src)
     *dst = *src;
     return dst;
 }
+
+static inline float frand(void) { return (float) rand() / RAND_MAX; }
 
 #ifndef __unique_identifier
 

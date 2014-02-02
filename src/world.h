@@ -16,6 +16,8 @@ static inline int world_to_screen_x(float x);
 static inline int world_to_screen_dx(float dx);
 static inline int world_to_screen_y(float y);
 static inline int world_to_screen_dy(float dy);
+static inline float screen_to_world_dx(int dx);
+static inline float screen_to_world_dy(int dy);
 
 static inline int world_to_screen_x(float x)
 {
@@ -35,6 +37,16 @@ static inline int world_to_screen_y(float y)
 static inline int world_to_screen_dy(float dy)
 {
     return (int) (dy * gfx_mode_info.y_resolution / WORLD_SIZE_Y);
+}
+
+static inline float screen_to_world_dx(int dx)
+{
+    return (float) dx * WORLD_SIZE_X / gfx_mode_info.x_resolution;
+}
+
+static inline float screen_to_world_dy(int dy)
+{
+    return (float) dy * WORLD_SIZE_Y / gfx_mode_info.y_resolution;
 }
 
 #endif

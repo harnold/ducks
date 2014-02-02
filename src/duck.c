@@ -1,22 +1,21 @@
 #include "duck.h"
 #include "res.h"
-#include "sprite.h"
 #include "world.h"
 
 DEFINE_ALLOCATOR(duck, struct duck, ALLOC_DEFAULT_BLOB_SIZE);
-
-static const struct sprite_class duck_classes[] = {
-    { &duck_flying_left_image, 100, 120, 80, 50.0f, 60.0f },
-    { &duck_flying_right_image, 100, 120, 80, 50.0f, 60.0f },
-    { &duck_falling_left_image, 160, 120, 80, 50.0f, 60.0f },
-    { &duck_falling_right_image, 160, 120, 80, 50.0f, 60.0f }
-};
 
 static const struct animation duck_animations[] = {
     { ANIM_ROTATE_FORWARD, 60, 0, 79 },
     { ANIM_ROTATE_FORWARD, 60, 0, 79 },
     { ANIM_ROTATE_FORWARD, 60, 0, 79 },
     { ANIM_ROTATE_FORWARD, 60, 0, 79 }
+};
+
+const struct sprite_class duck_classes[] = {
+    { &duck_flying_left_image, 100, 120, 80, 50.0f, 60.0f },
+    { &duck_flying_right_image, 100, 120, 80, 50.0f, 60.0f },
+    { &duck_falling_left_image, 160, 120, 80, 50.0f, 60.0f },
+    { &duck_falling_right_image, 160, 120, 80, 50.0f, 60.0f }
 };
 
 void init_duck(struct duck *duck, int state, double x, double y,

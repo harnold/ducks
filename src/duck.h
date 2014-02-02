@@ -3,8 +3,9 @@
 
 #include "alloc.h"
 #include "elist.h"
+#include "sprite.h"
 
-struct sprite;
+extern const struct sprite_class duck_classes[];
 
 enum duck_state {
     DUCK_FLYING_LEFT,

@@ -7,6 +7,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <time.h>
 
 #define GAME_TIMER_HZ   120.0f
 
@@ -23,6 +24,8 @@ int main(void)
     error_set_log_file(stdout);
 
     atexit(cleanup);
+
+    srand((unsigned int) time(NULL));
 
     if (mouse_init() != 0) {
         error("Initializing mouse failed");

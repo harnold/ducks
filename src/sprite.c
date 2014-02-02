@@ -17,8 +17,7 @@ void init_sprite_class(struct sprite_class *class, struct image *image,
 }
 
 void init_sprite(struct sprite *sprite, const struct sprite_class *class,
-                 float x, float y, float v_x, float v_y, int z, int frame,
-                 const struct animation *anim)
+                 float x, float y, float v_x, float v_y, int z, int frame)
 {
     *((struct sprite_class *) sprite) = *class;
     sprite->x = x;
@@ -27,15 +26,19 @@ void init_sprite(struct sprite *sprite, const struct sprite_class *class,
     sprite->v_y = v_y;
     sprite->z = z;
     sprite->frame = frame;
-    sprite->anim = anim;
+    sprite->anim = NULL;
     sprite->anim_start_time = 0.0f;
+}
+
+void sprite_set_animation(struct sprite *sprite, const struct animation *anim,
+                          float start_time)
+{
+    sprite->anim = anim;
+    sprite->anim_start_time = start_time;
 }
 
 void sprite_update(struct sprite *sprite, float t, float dt)
 {
-    sprite->x += dt * sprite->v_x;
-    sprite->y += dt * sprite->v_y;
-
     const struct animation *anim = sprite->anim;
 
     if (anim == NULL)

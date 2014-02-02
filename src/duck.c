@@ -32,8 +32,8 @@ void init_duck(struct duck *duck, int state, double x, double y,
 
     init_sprite(sprite, &duck_classes[state],
                 world_to_screen_x(x), world_to_screen_y(y),
-                world_to_screen_dx(v_x), world_to_screen_dy(v_y),
-                z, 0, &duck_animations[state]);
+                world_to_screen_dx(v_x), world_to_screen_dy(v_y), z, 0);
+    sprite_set_animation(sprite, &duck_animations[state], time);
 
     duck->sprite = sprite;
 }

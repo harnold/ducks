@@ -61,8 +61,9 @@ void init_sprite_class(struct sprite_class *class, struct image *image,
                        int width, int height, int num_frames,
                        float origin_x, float origin_y);
 void init_sprite(struct sprite *sprite, const struct sprite_class *class,
-                 float x, float y, float v_x, float v_y, int z, int frame,
-                 const struct animation *anim);
+                 float x, float y, float v_x, float v_y, int z, int frame);
+void sprite_set_animation(struct sprite *sprite, const struct animation *anim,
+                          float start_time);
 void sprite_update(struct sprite *sprite, float t, float dt);
 
 #endif

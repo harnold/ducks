@@ -17,13 +17,11 @@ void init_sprite_class(struct sprite_class *class, struct image *image,
 }
 
 void init_sprite(struct sprite *sprite, const struct sprite_class *class,
-                 float x, float y, float v_x, float v_y, int z, int frame)
+                 float x, float y, int z, int frame)
 {
     *((struct sprite_class *) sprite) = *class;
     sprite->x = x;
     sprite->y = y;
-    sprite->v_x = v_x;
-    sprite->v_y = v_y;
     sprite->z = z;
     sprite->frame = frame;
     sprite->anim = NULL;

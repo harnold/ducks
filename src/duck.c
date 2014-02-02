@@ -20,7 +20,7 @@ static const struct animation duck_animations[] = {
 };
 
 void init_duck(struct duck *duck, int state, double x, double y,
-               double v_x, double v_y, int z)
+               double v_x, double v_y, int z, float time)
 {
     duck->state = state;
     duck->world_x = x;
@@ -31,8 +31,7 @@ void init_duck(struct duck *duck, int state, double x, double y,
     struct sprite *sprite = alloc_sprite();
 
     init_sprite(sprite, &duck_classes[state],
-                world_to_screen_x(x), world_to_screen_y(y),
-                world_to_screen_dx(v_x), world_to_screen_dy(v_y), z, 0);
+                world_to_screen_x(x), world_to_screen_y(y), z, 0);
     sprite_set_animation(sprite, &duck_animations[state], time);
 
     duck->sprite = sprite;

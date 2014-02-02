@@ -34,7 +34,7 @@ DECLARE_ALLOCATOR(duck, struct duck);
     elist_get(__node, struct duck, link)
 
 void init_duck(struct duck *duck, int state, double x, double y,
-               double v_x, double v_y, int z);
+               double v_x, double v_y, int z, float time);
 void destroy_duck(struct duck *duck);
 
 #endif

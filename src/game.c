@@ -94,7 +94,7 @@ int game_init(void)
     init_sprite(&pointer_sprite, &pointer_class,
                 world_to_screen_x(WORLD_SIZE_X / 2),
                 world_to_screen_y(WORLD_SIZE_Y / 2),
-                0.0f, 0.0f, POINTER_LAYER, 0);
+                POINTER_LAYER, 0);
 
     scene_add_sprite(&game_scene, &pointer_sprite);
 
@@ -104,7 +104,7 @@ int game_init(void)
         init_sprite(&timer_sprites[i], &digit_class,
                     world_to_screen_x(TIMER_X_POS + i * digit_class.width),
                     world_to_screen_y(TIMER_Y_POS),
-                    0.0f, 0.0f, TIMER_LAYER, 0);
+                    TIMER_LAYER, 0);
         scene_add_sprite(&game_scene, &timer_sprites[i]);
     }
 
@@ -114,7 +114,7 @@ int game_init(void)
         init_sprite(&score_sprites[i], &digit_class,
                     world_to_screen_x(SCORE_X_POS + i * digit_class.width),
                     world_to_screen_y(SCORE_Y_POS),
-                    0.0f, 0.0f, SCORE_LAYER, 0);
+                    SCORE_LAYER, 0);
         scene_add_sprite(&game_scene, &score_sprites[i]);
     }
 

@@ -55,6 +55,9 @@ DECLARE_ALLOCATOR(sprite, struct sprite);
 #define sprite_list_get(__node) \
     elist_get(__node, struct sprite, link)
 
+static inline int sprite_get_x(const struct sprite *sprite);
+static inline int sprite_get_y(const struct sprite *sprite);
+
 void init_sprite_class(struct sprite_class *class, struct image *image,
                        int width, int height, int num_frames,
                        float origin_x, float origin_y);
@@ -63,5 +66,15 @@ void init_sprite(struct sprite *sprite, const struct sprite_class *class,
 void sprite_set_animation(struct sprite *sprite, const struct animation *anim,
                           float start_time);
 void sprite_update(struct sprite *sprite, float t, float dt);
+
+static inline int sprite_get_x(const struct sprite *sprite)
+{
+    return (int) (sprite->x - sprite->origin_x + 0.5f);
+}
+
+static inline int sprite_get_y(const struct sprite *sprite)
+{
+    return (int) (sprite->y - sprite->origin_y + 0.5f);
+}
 
 #endif

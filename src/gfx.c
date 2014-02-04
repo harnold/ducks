@@ -319,7 +319,6 @@ void gfx_draw_sprite(const struct sprite *sprite, unsigned flags)
 {
     gfx_draw_image_section(sprite->image, 0, sprite->frame * sprite->height,
                            sprite->width, sprite->height,
-                           (int) (sprite->x - sprite->origin_x + 0.5),
-                           (int) (sprite->y - sprite->origin_y + 0.5),
+                           sprite_get_x(sprite), sprite_get_y(sprite),
                            flags);
 }

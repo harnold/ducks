@@ -148,7 +148,6 @@ static void update_flying_ducks(float dt)
         if (duck->world_x < WORLD_MIN_X - off_x ||
             duck->world_x > WORLD_MAX_X + off_x) {
 
-            scene_remove_sprite(&game_scene, duck->sprite);
             elist_remove(node);
             delete_duck(duck);
             num_flying_ducks--;

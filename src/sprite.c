@@ -26,6 +26,12 @@ void init_sprite(struct sprite *sprite, const struct sprite_class *class,
     sprite->frame = frame;
     sprite->anim = NULL;
     sprite->anim_start_time = 0.0f;
+    elist_link(&sprite->link, &sprite->link);
+}
+
+void destroy_sprite(struct sprite *sprite)
+{
+    elist_remove(&sprite->link);
 }
 
 struct sprite *create_sprite(const struct sprite_class *class, float x, float y,
@@ -38,6 +44,7 @@ struct sprite *create_sprite(const struct sprite_class *class, float x, float y,
 
 void delete_sprite(struct sprite *sprite)
 {
+    destroy_sprite(sprite);
     free_sprite(sprite);
 }
 

@@ -222,6 +222,8 @@ void game_exit(void)
     destroy_ducks();
     destroy_scene(&game_scene);
     res_destroy_images();
+
+    duck_cleanup();
 }
 
 void game_run(void)

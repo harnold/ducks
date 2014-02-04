@@ -87,3 +87,8 @@ void sprite_update(struct sprite *sprite, float t, float dt)
         break;
     }
 }
+
+void sprite_cleanup(void)
+{
+    free_all_sprite_allocs();
+}

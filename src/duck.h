@@ -40,5 +40,6 @@ void destroy_duck(struct duck *duck);
 struct duck *create_duck(int state, double x, double y,
                          double v_x, double v_y, int z, float time);
 void delete_duck(struct duck *duck);
+void duck_cleanup(void);
 
 #endif

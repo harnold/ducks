@@ -56,3 +56,8 @@ void delete_duck(struct duck *duck)
     destroy_duck(duck);
     free_duck(duck);
 }
+
+void duck_cleanup(void)
+{
+    free_all_duck_allocs();
+}

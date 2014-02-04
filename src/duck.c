@@ -34,10 +34,12 @@ void init_duck(struct duck *duck, int state, double x, double y,
     sprite_set_animation(sprite, &duck_animations[state], time);
 
     duck->sprite = sprite;
+    elist_link(&duck->link, &duck->link);
 }
 
 void destroy_duck(struct duck *duck)
 {
+    elist_remove(&duck->link);
     delete_sprite(duck->sprite);
 }
 

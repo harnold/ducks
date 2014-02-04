@@ -148,7 +148,6 @@ static void update_flying_ducks(float dt)
         if (duck->world_x < WORLD_MIN_X - off_x ||
             duck->world_x > WORLD_MAX_X + off_x) {
 
-            elist_remove(node);
             delete_duck(duck);
             num_flying_ducks--;
         }
@@ -159,17 +158,11 @@ static void destroy_ducks(void)
 {
     struct elist_node *node, *tmp;
 
-    elist_for_each_node_safe(node, tmp, &flying_ducks_list) {
-        struct duck *duck = duck_list_get(node);
-        elist_remove(node);
-        delete_duck(duck);
-    }
+    elist_for_each_node_safe(node, tmp, &flying_ducks_list)
+        delete_duck(duck_list_get(node));
 
-    elist_for_each_node_safe(node, tmp, &falling_ducks_list) {
-        struct duck *duck = duck_list_get(node);
-        elist_remove(node);
-        delete_duck(duck);
-    }
+    elist_for_each_node_safe(node, tmp, &falling_ducks_list)
+        delete_duck(duck_list_get(node));
 }
 
 int game_init(void)

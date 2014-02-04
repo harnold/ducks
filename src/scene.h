@@ -9,6 +9,9 @@ struct sprite;
 struct scene {
     struct image *background;
     struct elist sprite_list;
+    struct elist *damage_list;
+    struct elist damage_list_1;
+    struct elist damage_list_2;
 };
 
 void init_scene(struct scene *scene);
@@ -18,6 +21,6 @@ void scene_add_sprite(struct scene *scene, struct sprite *sprite);
 void scene_remove_sprite(struct scene *scene, struct sprite *sprite);
 void scene_update(struct scene *scene, float t, float dt);
 void scene_draw(struct scene *scene);
+void scene_cleanup(void);
 
 #endif
-

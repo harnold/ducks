@@ -225,6 +225,7 @@ void game_exit(void)
 
     duck_cleanup();
     sprite_cleanup();
+    scene_cleanup();
 }
 
 void game_run(void)

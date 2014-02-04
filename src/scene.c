@@ -4,19 +4,68 @@
 #include "gfx.h"
 #include "sprite.h"
 
+struct damage_rect {
+    int x, y, w, h;
+    struct elist_node link;
+};
+
+DEFINE_ALLOCATOR(damage_rect, struct damage_rect, ALLOC_DEFAULT_BLOB_SIZE);
+
+#define damage_list_for_each(__rect, __list) \
+    elist_for_each_elem(__rect, __list, struct damage_rect, link)
+
+#define damage_list_get(__node) \
+    elist_get(__node, struct damage_rect, link)
+
+inline static struct damage_rect *create_damage_rect(int x, int y, int w, int h,
+                                                     struct elist *list)
+{
+    struct damage_rect *r = alloc_damage_rect();
+    r->x = x; r->y = y; r->w = w; r->h = h;
+    elist_insert_back(&r->link, list);
+    return r;
+}
+
+inline static void delete_damage_rect(struct damage_rect *r)
+{
+    elist_remove(&r->link);
+    free_damage_rect(r);
+}
+
+static void clear_damage_list(struct elist *list)
+{
+    struct elist_node *n, *tmp;
+
+    elist_for_each_node_safe(n, tmp, list)
+        delete_damage_rect(damage_list_get(n));
+}
+
 void init_scene(struct scene *scene)
 {
     scene->background = NULL;
     init_elist(&scene->sprite_list);
+
+    init_elist(&scene->damage_list_1);
+    init_elist(&scene->damage_list_2);
+    scene->damage_list = &scene->damage_list_1;
 }
 
 void destroy_scene(struct scene *scene)
 {
+    clear_damage_list(&scene->damage_list_1);
+    clear_damage_list(&scene->damage_list_2);
 }
 
 void scene_set_background(struct scene *scene, struct image *image)
 {
     scene->background = image;
+
+    gfx_draw_image(scene->background, 0, 0, GFX_NO_CLIPPING);
+    gfx_flip();
+    gfx_draw_image(scene->background, 0, 0, GFX_NO_CLIPPING);
+
+    clear_damage_list(&scene->damage_list_1);
+    clear_damage_list(&scene->damage_list_2);
 }
 
 void scene_add_sprite(struct scene *scene, struct sprite *sprite)
@@ -47,11 +96,30 @@ void scene_update(struct scene *scene, float t, float dt)
 
 void scene_draw(struct scene *scene)
 {
-    gfx_draw_image(scene->background, 0, 0, GFX_NO_CLIPPING);
+    struct damage_rect *r;
+
+    damage_list_for_each(r, scene->damage_list) {
+        gfx_draw_image_section(scene->background, r->x, r->y, r->w, r->h,
+                               r->x, r->y, IMAGE_BLIT_COPY);
+    }
+
+    clear_damage_list(scene->damage_list);
 
     struct sprite *sprite;
 
     sprite_list_for_each(sprite, &scene->sprite_list) {
         gfx_draw_sprite(sprite, IMAGE_BLIT_MASK);
+        create_damage_rect(sprite_get_x(sprite), sprite_get_y(sprite),
+                           sprite->width, sprite->height, scene->damage_list);
     }
+
+    if (scene->damage_list == &scene->damage_list_1)
+        scene->damage_list = &scene->damage_list_2;
+    else
+        scene->damage_list = &scene->damage_list_1;
+}
+
+void scene_cleanup(void)
+{
+    free_all_damage_rect_allocs();
 }

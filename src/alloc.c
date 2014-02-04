@@ -47,7 +47,7 @@ void _free_all(struct allocator *alloc)
 
     while (blob != NULL) {
         struct alloc_blob *next = blob->next;
-        free(blob);
+        xfree(blob);
         blob = next;
     }
 

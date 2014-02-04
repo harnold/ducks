@@ -21,7 +21,7 @@ void init_image(struct image *image, int width, int height, uint8_t *data)
 
 void destroy_image(struct image *image)
 {
-    free(image->data);
+    xfree(image->data);
 }
 
 int load_image(const char *path, struct image *image)

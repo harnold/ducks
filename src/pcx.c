@@ -129,6 +129,6 @@ failure:
     if (file)
         fclose(file);
     if (data)
-        free(data);
+        xfree(data);
     return -1;
 }

@@ -151,6 +151,7 @@ static void update_flying_ducks(float dt)
             scene_remove_sprite(&game_scene, duck->sprite);
             elist_remove(node);
             destroy_duck(duck);
+            free_duck(duck);
             num_flying_ducks--;
         }
     }
@@ -164,12 +165,14 @@ static void destroy_ducks(void)
         struct duck *duck = duck_list_get(node);
         elist_remove(node);
         destroy_duck(duck);
+        free_duck(duck);
     }
 
     elist_for_each_node_safe(node, tmp, &falling_ducks_list) {
         struct duck *duck = duck_list_get(node);
         elist_remove(node);
         destroy_duck(duck);
+        free_duck(duck);
     }
 }
 

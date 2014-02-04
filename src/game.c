@@ -120,9 +120,9 @@ static void create_ducks(float time)
         world_x = WORLD_MIN_X - off_x;
     }
 
-    struct duck *duck = alloc_duck();
+    struct duck *duck = create_duck(state, world_x, world_y, world_v_x, 0.0f,
+                                    DUCKS_LAYER, time);
 
-    init_duck(duck, state, world_x, world_y, world_v_x, 0.0f, DUCKS_LAYER, time);
     elist_insert_back(&duck->link, &flying_ducks_list);
     scene_add_sprite(&game_scene, duck->sprite);
     time_of_last_duck = time;
@@ -150,8 +150,7 @@ static void update_flying_ducks(float dt)
 
             scene_remove_sprite(&game_scene, duck->sprite);
             elist_remove(node);
-            destroy_duck(duck);
-            free_duck(duck);
+            delete_duck(duck);
             num_flying_ducks--;
         }
     }
@@ -164,15 +163,13 @@ static void destroy_ducks(void)
     elist_for_each_node_safe(node, tmp, &flying_ducks_list) {
         struct duck *duck = duck_list_get(node);
         elist_remove(node);
-        destroy_duck(duck);
-        free_duck(duck);
+        delete_duck(duck);
     }
 
     elist_for_each_node_safe(node, tmp, &falling_ducks_list) {
         struct duck *duck = duck_list_get(node);
         elist_remove(node);
-        destroy_duck(duck);
-        free_duck(duck);
+        delete_duck(duck);
     }
 }
 

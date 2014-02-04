@@ -40,3 +40,17 @@ void destroy_duck(struct duck *duck)
 {
     free_sprite(duck->sprite);
 }
+
+struct duck *create_duck(int state, double x, double y,
+                         double v_x, double v_y, int z, float time)
+{
+    struct duck *duck = alloc_duck();
+    init_duck(duck, state, x, y, v_x, v_y, z, time);
+    return duck;
+}
+
+void delete_duck(struct duck *duck)
+{
+    destroy_duck(duck);
+    free_duck(duck);
+}

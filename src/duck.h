@@ -37,5 +37,8 @@ DECLARE_ALLOCATOR(duck, struct duck);
 void init_duck(struct duck *duck, int state, double x, double y,
                double v_x, double v_y, int z, float time);
 void destroy_duck(struct duck *duck);
+struct duck *create_duck(int state, double x, double y,
+                         double v_x, double v_y, int z, float time);
+void delete_duck(struct duck *duck);
 
 #endif

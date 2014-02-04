@@ -6,6 +6,7 @@
 
 void init_scene(struct scene *scene)
 {
+    scene->background = NULL;
     init_elist(&scene->sprite_list);
 }
 

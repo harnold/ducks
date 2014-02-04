@@ -28,6 +28,19 @@ void init_sprite(struct sprite *sprite, const struct sprite_class *class,
     sprite->anim_start_time = 0.0f;
 }
 
+struct sprite *create_sprite(const struct sprite_class *class, float x, float y,
+                             int z, int frame)
+{
+    struct sprite *sprite = alloc_sprite();
+    init_sprite(sprite, class, x, y, z, frame);
+    return sprite;
+}
+
+void delete_sprite(struct sprite *sprite)
+{
+    free_sprite(sprite);
+}
+
 void sprite_set_animation(struct sprite *sprite, const struct animation *anim,
                           float start_time)
 {

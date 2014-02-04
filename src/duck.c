@@ -27,10 +27,10 @@ void init_duck(struct duck *duck, int state, double x, double y,
     duck->world_v_x = v_x;
     duck->world_v_y = v_y;
 
-    struct sprite *sprite = alloc_sprite();
+    struct sprite *sprite = create_sprite(&duck_classes[state],
+                                          world_to_screen_x(x),
+                                          world_to_screen_y(y), z, 0);
 
-    init_sprite(sprite, &duck_classes[state],
-                world_to_screen_x(x), world_to_screen_y(y), z, 0);
     sprite_set_animation(sprite, &duck_animations[state], time);
 
     duck->sprite = sprite;
@@ -38,7 +38,7 @@ void init_duck(struct duck *duck, int state, double x, double y,
 
 void destroy_duck(struct duck *duck)
 {
-    free_sprite(duck->sprite);
+    delete_sprite(duck->sprite);
 }
 
 struct duck *create_duck(int state, double x, double y,

@@ -224,6 +224,7 @@ void game_exit(void)
     res_destroy_images();
 
     duck_cleanup();
+    sprite_cleanup();
 }
 
 void game_run(void)

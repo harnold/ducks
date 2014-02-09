@@ -34,9 +34,9 @@
 #define GAME_TIMEOUT            90
 
 #define DUCKS_LAYER             2
-#define MAX_FLYING_DUCKS        10
-#define MAX_ALL_DUCKS           30
-#define DUCK_DENSITY            0.02f
+#define MAX_FLYING_DUCKS        20
+#define MAX_ALL_DUCKS           40
+#define DUCK_DENSITY            0.1f
 
 struct gfx_mode_info gfx_mode_info;
 

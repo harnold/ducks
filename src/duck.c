@@ -4,6 +4,9 @@
 
 DEFINE_ALLOCATOR(duck, struct duck, ALLOC_DEFAULT_BLOB_SIZE);
 
+#define DUCK_HIT_RADIUS_X       3.5f
+#define DUCK_HIT_RADIUS_Y       4.0f
+
 static const struct animation duck_animations[] = {
     { ANIM_ROTATE_FORWARD, 60, 0, 79 },
     { ANIM_ROTATE_FORWARD, 60, 0, 79 },
@@ -60,4 +63,16 @@ void delete_duck(struct duck *duck)
 void duck_cleanup(void)
 {
     free_all_duck_allocs();
+}
+
+bool duck_test_hit(struct duck *duck, int screen_x, int screen_y)
+{
+    int duck_x = duck->sprite->x;
+    int duck_y = duck->sprite->y;
+
+    int dx = (int) (duck->sprite->width / DUCK_HIT_RADIUS_X);
+    int dy = (int) (duck->sprite->height / DUCK_HIT_RADIUS_Y);
+
+    return screen_x >= duck_x - dx && screen_x <= duck_x + dx
+        && screen_y >= duck_y - dy && screen_y <= duck_y + dy;
 }

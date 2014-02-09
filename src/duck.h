@@ -5,6 +5,8 @@
 #include "elist.h"
 #include "sprite.h"
 
+#include <stdbool.h>
+
 extern const struct sprite_class duck_classes[];
 
 enum duck_state {
@@ -41,5 +43,6 @@ struct duck *create_duck(int state, double x, double y,
                          double v_x, double v_y, int z, float time);
 void delete_duck(struct duck *duck);
 void duck_cleanup(void);
+bool duck_test_hit(struct duck *duck, int screen_x, int screen_y);
 
 #endif

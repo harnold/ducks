@@ -47,17 +47,17 @@ int main(void)
         goto failure;
     }
 
-    game_run();
+    int score = game_run();
 
     cleanup();
 
-    log("Everything alright.\n");
+    printf("Congratulations! You reached a score of %d points!\n", score);
+
     exit(EXIT_SUCCESS);
 
 failure:
 
     cleanup();
 
-    log("Something went wrong.\n");
     exit(EXIT_FAILURE);
 }

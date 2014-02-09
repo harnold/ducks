@@ -3,6 +3,6 @@
 
 int game_init(void);
 void game_exit(void);
-void game_run(void);
+int game_run(void);
 
 #endif

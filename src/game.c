@@ -223,7 +223,7 @@ void game_exit(void)
     scene_cleanup();
 }
 
-void game_run(void)
+int game_run(void)
 {
     bool quit = false;
 
@@ -260,4 +260,6 @@ void game_run(void)
 
     while (!_kbhit());
     getch();
+
+    return game_score;
 }

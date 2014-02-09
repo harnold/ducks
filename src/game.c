@@ -37,6 +37,10 @@
 #define MAX_FLYING_DUCKS        20
 #define MAX_ALL_DUCKS           40
 #define DUCK_DENSITY            0.1f
+#define DUCK_MIN_SPEED          (WORLD_SIZE_X / 10.0f)
+#define DUCK_MAX_SPEED_1        (WORLD_SIZE_X / 1.0f)
+#define DUCK_MAX_SPEED          (DUCK_MAX_SPEED_1 + DUCK_MIN_SPEED)
+#define DUCK_MIN_HEIGHT         (0.7f * WORLD_SIZE_Y)
 
 struct gfx_mode_info gfx_mode_info;
 
@@ -107,8 +111,8 @@ static void create_ducks(float time)
     float off_y = screen_to_world_dy(class->height - class->origin_y);
 
     float world_x;
-    float world_y = frand() * 0.7f * WORLD_SIZE_Y + off_y;
-    float world_v_x = frand() * WORLD_SIZE_X / 1.5f + WORLD_SIZE_X / 50.0f;
+    float world_y = frand() * DUCK_MIN_HEIGHT + off_y;
+    float world_v_x = frand() * DUCK_MAX_SPEED_1 + DUCK_MIN_SPEED;
 
     if (state == DUCK_FLYING_LEFT) {
         world_x = WORLD_MAX_X + off_x;

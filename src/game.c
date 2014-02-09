@@ -50,12 +50,10 @@ static const struct sprite_class digit_class = {
 
 static struct scene game_scene;
 static struct sprite pointer_sprite;
-
 static struct sprite timer_sprites[TIMER_DIGITS];
-
-static int score;
 static struct sprite score_sprites[SCORE_DIGITS];
 
+static int game_score;
 static int num_flying_ducks;
 static int num_falling_ducks;
 static struct elist flying_ducks_list;
@@ -195,7 +193,7 @@ int game_init(void)
         scene_add_sprite(&game_scene, &timer_sprites[i]);
     }
 
-    score = 0;
+    game_score = 0;
 
     for (int i = 0; i < SCORE_DIGITS; i++) {
         init_sprite(&score_sprites[i], &digit_class,

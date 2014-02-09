@@ -1,4 +1,5 @@
 #include "game.h"
+#include "bits.h"
 #include "compat.h"
 #include "duck.h"
 #include "elist.h"
@@ -28,6 +29,8 @@
 #define SCORE_LAYER             0
 #define SCORE_X_POS             608
 #define SCORE_Y_POS             8
+#define SCORE_MIN_INC           10
+#define SCORE_SCALE_FACTOR      10
 
 #define POINTER_LAYER           1
 
@@ -155,6 +158,29 @@ static void update_flying_ducks(float dt)
     }
 }
 
+static void shoot_and_test_hit(int x, int y)
+{
+    struct elist_node *node, *tmp;
+
+    elist_for_each_node_safe(node, tmp, &flying_ducks_list) {
+
+        struct duck *duck = duck_list_get(node);
+
+        if (!duck_test_hit(duck, x, y))
+            continue;
+
+        float speed_fact = (duck->world_v_x - DUCK_MIN_SPEED) / DUCK_MAX_SPEED;
+        game_score += (int) (SCORE_SCALE_FACTOR * (speed_fact + 1.0f)) * SCORE_MIN_INC;
+
+        update_number_display(score_sprites, SCORE_DIGITS, game_score);
+
+        delete_duck(duck);
+        num_flying_ducks--;
+
+        return;
+    }
+}
+
 static void destroy_ducks(void)
 {
     struct elist_node *node, *tmp;
@@ -235,6 +261,8 @@ int game_run(void)
     float time = start_time;
     float elapsed_time = 0;
 
+    unsigned mouse_button_old = MOUSE_NO_BUTTON;
+
     while (!quit) {
 
         if (_kbhit() && getch() == KEY_ESC) {
@@ -242,7 +270,15 @@ int game_run(void)
             quit = 1;
         }
 
-        update_pointer();
+        unsigned mouse_button = update_pointer();
+
+        if (test_bit(mouse_button, MOUSE_LEFT_BUTTON) &&
+            !test_bit(mouse_button_old, MOUSE_LEFT_BUTTON)) {
+
+            shoot_and_test_hit(pointer_sprite.x, pointer_sprite.y);
+        }
+
+        mouse_button_old = mouse_button;
 
         float dt = timer_get_time_delta();
         time += dt;

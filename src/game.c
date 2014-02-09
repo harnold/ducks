@@ -264,4 +264,5 @@ void game_run(void)
     }
 
     while (!_kbhit());
+    getch();
 }

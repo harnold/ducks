@@ -60,6 +60,14 @@ void delete_duck(struct duck *duck)
     free_duck(duck);
 }
 
+void duck_set_state(struct duck *duck, int state, float time)
+{
+    duck->state = state;
+    const struct sprite_class *class = &duck_classes[state];
+    *((struct sprite_class *) duck->sprite) = *class;
+    sprite_set_animation(duck->sprite, &duck_animations[state], time);
+}
+
 void duck_cleanup(void)
 {
     free_all_duck_allocs();

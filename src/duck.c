@@ -10,13 +10,19 @@ DEFINE_ALLOCATOR(duck, struct duck, ALLOC_DEFAULT_BLOB_SIZE);
 const struct animation duck_animations[] = {
     { ANIM_ROTATE_FORWARD, 60, 0, 79 },
     { ANIM_ROTATE_FORWARD, 60, 0, 79 },
-    { ANIM_ROTATE_FORWARD, 60, 0, 79 },
-    { ANIM_ROTATE_FORWARD, 60, 0, 79 }
+    { ANIM_ONCE_FORWARD, 60, 0, 39 },
+    { ANIM_ONCE_FORWARD, 60, 0, 39 },
+    { ANIM_ROTATE_FORWARD, 60, 40, 79 },
+    { ANIM_ROTATE_FORWARD, 60, 40, 79 },
 };
+
+const float duck_seconds_falling = 40 / 60.0f;
 
 const struct sprite_class duck_classes[] = {
     { &duck_flying_left_image, 100, 120, 80, 50.0f, 60.0f },
     { &duck_flying_right_image, 100, 120, 80, 50.0f, 60.0f },
+    { &duck_falling_left_image, 160, 120, 80, 50.0f, 60.0f },
+    { &duck_falling_right_image, 160, 120, 80, 50.0f, 60.0f },
     { &duck_falling_left_image, 160, 120, 80, 50.0f, 60.0f },
     { &duck_falling_right_image, 160, 120, 80, 50.0f, 60.0f }
 };

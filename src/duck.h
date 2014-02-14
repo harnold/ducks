@@ -8,6 +8,7 @@
 #include <stdbool.h>
 
 extern const struct animation duck_animations[];
+extern const float duck_seconds_falling;
 extern const struct sprite_class duck_classes[];
 
 enum duck_state {

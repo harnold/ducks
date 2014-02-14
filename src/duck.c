@@ -7,7 +7,7 @@ DEFINE_ALLOCATOR(duck, struct duck, ALLOC_DEFAULT_BLOB_SIZE);
 #define DUCK_HIT_RADIUS_X       3.5f
 #define DUCK_HIT_RADIUS_Y       4.0f
 
-static const struct animation duck_animations[] = {
+const struct animation duck_animations[] = {
     { ANIM_ROTATE_FORWARD, 60, 0, 79 },
     { ANIM_ROTATE_FORWARD, 60, 0, 79 },
     { ANIM_ROTATE_FORWARD, 60, 0, 79 },

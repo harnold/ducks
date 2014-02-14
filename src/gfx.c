@@ -322,3 +322,17 @@ void gfx_draw_sprite(const struct sprite *sprite, unsigned flags)
                            sprite_get_x(sprite), sprite_get_y(sprite),
                            flags);
 }
+
+bool gfx_sprite_visible(const struct sprite *sprite)
+{
+    int xs = sprite_get_x(sprite);
+    int ys = sprite_get_y(sprite);
+    int xe = xs + sprite->width - 1;
+    int ye = ys + sprite->height - 1;
+
+    int clip_xe = gfx_clip_x + gfx_clip_w - 1;
+    int clip_ye = gfx_clip_y + gfx_clip_h - 1;
+
+    return (xs <= clip_xe && xe >= gfx_clip_x &&
+            ys <= clip_ye && ye >= gfx_clip_y);
+}

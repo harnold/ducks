@@ -77,13 +77,11 @@ void sprite_update(struct sprite *sprite, float t, float dt)
         break;
 
     case ANIM_ONCE_FORWARD:
-        if (sprite->frame < anim->end_frame)
-            sprite->frame = min(anim->start_frame + nframe, anim->end_frame);
+        sprite->frame = min(anim->start_frame + nframe, anim->end_frame);
         break;
 
     case ANIM_ONCE_BACKWARD:
-        if (sprite->frame > anim->end_frame)
-            sprite->frame = max(anim->start_frame - nframe, anim->end_frame);
+        sprite->frame = max(anim->start_frame - nframe, anim->end_frame);
         break;
     }
 }

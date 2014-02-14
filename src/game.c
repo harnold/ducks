@@ -44,6 +44,7 @@
 #define DUCK_MAX_SPEED_1        (WORLD_SIZE_X / 1.0f)
 #define DUCK_MAX_SPEED          (DUCK_MAX_SPEED_1 + DUCK_MIN_SPEED)
 #define DUCK_MIN_HEIGHT         (0.7f * WORLD_SIZE_Y)
+#define DUCK_FALLING_ACCEL      100.0f
 
 struct gfx_mode_info gfx_mode_info;
 
@@ -107,7 +108,7 @@ static void create_ducks(float time)
     if (frand() > chance)
         return;
 
-    int state = rand() % 2;
+    int state = (frand() > 0.5) ? DUCK_FLYING_LEFT : DUCK_FLYING_RIGHT;
     const struct sprite_class *class = &duck_classes[state];
 
     float off_x = screen_to_world_dx(class->width - class->origin_x);
@@ -147,18 +148,52 @@ static void update_flying_ducks(float dt)
         duck->sprite->x = world_to_screen_x(duck->world_x);
         duck->sprite->y = world_to_screen_y(duck->world_y);
 
-        float off_x = screen_to_world_dx(duck->sprite->width / 2);
-
-        if (duck->world_x < WORLD_MIN_X - off_x ||
-            duck->world_x > WORLD_MAX_X + off_x) {
-
+        if (!gfx_sprite_visible(duck->sprite)) {
             delete_duck(duck);
             num_flying_ducks--;
         }
     }
 }
 
-static void shoot_and_test_hit(int x, int y)
+static void update_falling_ducks(float time, float dt)
+{
+    struct elist_node *node, *tmp;
+
+    elist_for_each_node_safe(node, tmp, &falling_ducks_list) {
+
+        struct duck *duck = duck_list_get(node);
+
+        if (duck->state == DUCK_FALLING_LEFT ||
+            duck->state == DUCK_FALLING_RIGHT) {
+
+            float truddling_start_time =
+                duck->sprite->anim_start_time + duck_seconds_falling;
+
+            if (time >= truddling_start_time) {
+
+                int new_state = (duck->state == DUCK_FALLING_LEFT) ?
+                    DUCK_TRUDLING_LEFT :
+                    DUCK_TRUDLING_RIGHT;
+
+                duck_set_state(duck, new_state, truddling_start_time);
+            }
+        }
+
+        duck->world_v_y += DUCK_FALLING_ACCEL * dt;
+        duck->world_x += dt * duck->world_v_x;
+        duck->world_y += dt * duck->world_v_y;
+
+        duck->sprite->x = world_to_screen_x(duck->world_x);
+        duck->sprite->y = world_to_screen_y(duck->world_y);
+
+        if (!gfx_sprite_visible(duck->sprite)) {
+            delete_duck(duck);
+            num_falling_ducks--;
+        }
+    }
+}
+
+static void shoot_and_test_hit(int x, int y, float time)
 {
     struct elist_node *node, *tmp;
 
@@ -174,8 +209,14 @@ static void shoot_and_test_hit(int x, int y)
 
         update_number_display(score_sprites, SCORE_DIGITS, game_score);
 
-        delete_duck(duck);
+        int new_state = (duck->state == DUCK_FLYING_LEFT) ?
+            DUCK_FALLING_LEFT :
+            DUCK_FALLING_RIGHT;
+
+        duck_set_state(duck, new_state, time);
+        elist_move(node, elist_end(&falling_ducks_list));
         num_flying_ducks--;
+        num_falling_ducks++;
 
         return;
     }
@@ -270,16 +311,6 @@ int game_run(void)
             quit = 1;
         }
 
-        unsigned mouse_button = update_pointer();
-
-        if (test_bit(mouse_button, MOUSE_LEFT_BUTTON) &&
-            !test_bit(mouse_button_old, MOUSE_LEFT_BUTTON)) {
-
-            shoot_and_test_hit(pointer_sprite.x, pointer_sprite.y);
-        }
-
-        mouse_button_old = mouse_button;
-
         float dt = timer_get_time_delta();
         time += dt;
         elapsed_time += dt;
@@ -290,8 +321,19 @@ int game_run(void)
         update_number_display(timer_sprites, TIMER_DIGITS,
                               GAME_TIMEOUT - (int) elapsed_time);
 
+        unsigned mouse_button = update_pointer();
+
+        if (test_bit(mouse_button, MOUSE_LEFT_BUTTON) &&
+            !test_bit(mouse_button_old, MOUSE_LEFT_BUTTON)) {
+
+            shoot_and_test_hit(pointer_sprite.x, pointer_sprite.y, time);
+        }
+
+        mouse_button_old = mouse_button;
+
         create_ducks(time);
         update_flying_ducks(dt);
+        update_falling_ducks(time, dt);
 
         scene_update(&game_scene, time, dt);
         scene_draw(&game_scene);

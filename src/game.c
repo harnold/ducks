@@ -44,7 +44,7 @@
 #define DUCK_MAX_SPEED_1        (WORLD_SIZE_X / 1.0f)
 #define DUCK_MAX_SPEED          (DUCK_MAX_SPEED_1 + DUCK_MIN_SPEED)
 #define DUCK_MIN_HEIGHT         (0.7f * WORLD_SIZE_Y)
-#define DUCK_FALLING_ACCEL      100.0f
+#define DUCK_FALLING_ACCEL      60.0f
 
 struct gfx_mode_info gfx_mode_info;
 

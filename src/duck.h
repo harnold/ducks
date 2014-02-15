@@ -47,5 +47,6 @@ void delete_duck(struct duck *duck);
 void duck_set_state(struct duck *duck, int state, float time);
 void duck_cleanup(void);
 bool duck_test_hit(struct duck *duck, int screen_x, int screen_y);
+bool duck_visible(struct duck *duck);
 
 #endif

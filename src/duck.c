@@ -90,3 +90,24 @@ bool duck_test_hit(struct duck *duck, int screen_x, int screen_y)
     return screen_x >= duck_x - dx && screen_x <= duck_x + dx
         && screen_y >= duck_y - dy && screen_y <= duck_y + dy;
 }
+
+bool duck_visible(struct duck *duck)
+{
+    struct sprite *sprite = duck->sprite;
+
+    if (sprite->y > gfx_mode_info.y_resolution + sprite->origin_y)
+        return false;
+
+    switch (duck->state) {
+
+    case DUCK_FLYING_LEFT:
+    case DUCK_FALLING_LEFT:
+    case DUCK_TRUDLING_LEFT:
+
+        return sprite->x >= -sprite->origin_x;
+
+    default:
+
+        return sprite->x <= gfx_mode_info.x_resolution + sprite->origin_x;
+    }
+}

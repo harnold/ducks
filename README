@@ -11,7 +11,7 @@ Introduction
     popular in Germany in the late 1990s that it was jokingly accused of
     having a measurable negative impact on the national economy due to the
     numerous work hours wasted by employees playing the game.  This remake
-    gives you the chance to counter productivity once again...
+    gives you the chance to counter productivity once again.
 
 
 How to play
@@ -35,9 +35,9 @@ System requirements
     at least 1MB of video memory that can display 800x600 pixels at 256
     colors and that supports VBE 2.0.
 
-    If you have a more recent system, you can try to run the game in a
-    virtual machine using FreeDOS or use a DOS emulator such as DOSBox
-    or DOSEMU.
+    If you have a more recent system, you can run the game in a virtual
+    machine using FreeDOS or use a DOS emulator such as DOSBox or DOSEMU.
+    See the file Emu.txt for more information.
 
 
 Production notes
@@ -45,7 +45,7 @@ Production notes
 
     The following tools were used to produce DUCKS:
 
-    - Compiler/Assembler: Watcom C/C++ 10.6
+    - Compiler/Assembler: Watcom C/C++ 10.6, OpenWatcom 1.9
     - 3d modeling and rendering: 3D Studio MAX
     - 2d image editing: Corel Photo-Paint, GIMP
 

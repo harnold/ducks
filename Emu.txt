@@ -2,13 +2,6 @@ DUCKS has been tested using the following virtual machines and DOS emulators
 (all running on Linux):
 
 
-FreeDOS on VirtualBox
----------------------
-
-    - The game runs flawlessly.  The mouse is too sensitive to movements for
-      my taste, but this can be changed by adapting the mouse driver settings.
-
-
 DOSEMU
 ------
 
@@ -21,13 +14,20 @@ DOSEMU
       in ~/.dosemurc.
 
 
+FreeDOS on VirtualBox
+---------------------
+
+    - The game runs flawlessly.  The mouse is too sensitive to movements for
+      my taste, but this can probably be changed by adapting the mouse driver
+      settings.
+
+
 DOSBox
 ------
 
-    - Animations are flickering or some parts of the screen are not properly
+    - Animations are flickering and some parts of the screen are not properly
       drawn.  This is a problem with DOSBox's SuperVGA emulation, which does
-      not properly support the particular video mode used by the game; there
-      is nothing I can do about that.
+      not fully support the particular video mode used by the game.
 
     - On (very) old machines, the game can run too slowly.  You can try to
       increase DOSBox's frameskip setting by pressing CTRL-F8.

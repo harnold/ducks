@@ -148,7 +148,7 @@ static void update_flying_ducks(float dt)
         duck->sprite->x = world_to_screen_x(duck->world_x);
         duck->sprite->y = world_to_screen_y(duck->world_y);
 
-        if (!gfx_sprite_visible(duck->sprite)) {
+        if (!duck_visible(duck)) {
             delete_duck(duck);
             num_flying_ducks--;
         }
@@ -186,7 +186,7 @@ static void update_falling_ducks(float time, float dt)
         duck->sprite->x = world_to_screen_x(duck->world_x);
         duck->sprite->y = world_to_screen_y(duck->world_y);
 
-        if (!gfx_sprite_visible(duck->sprite)) {
+        if (!duck_visible(duck)) {
             delete_duck(duck);
             num_falling_ducks--;
         }

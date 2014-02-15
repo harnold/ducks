@@ -45,6 +45,9 @@
 #define DUCK_MAX_SPEED          (DUCK_MAX_SPEED_1 + DUCK_MIN_SPEED)
 #define DUCK_MIN_HEIGHT         (0.7f * WORLD_SIZE_Y)
 #define DUCK_FALLING_ACCEL      60.0f
+#define DUCK_MIN_INTERVAL       2.0f
+#define DUCK_MAX_INTERVAL_1     0.8f
+#define DUCK_INTERVAL_SCALE     0.1f
 
 struct gfx_mode_info gfx_mode_info;
 
@@ -62,11 +65,12 @@ static struct sprite timer_sprites[TIMER_DIGITS];
 static struct sprite score_sprites[SCORE_DIGITS];
 
 static int game_score;
+static float elapsed_time;
 static int num_flying_ducks;
 static int num_falling_ducks;
 static struct elist flying_ducks_list;
 static struct elist falling_ducks_list;
-static float time_of_last_duck;
+static float time_of_next_duck;
 
 static inline float confine_float(float x, float min, float max)
 {
@@ -98,21 +102,15 @@ static void update_number_display(struct sprite sprites[], int num_digits,
 static void create_ducks(float time)
 {
     if (num_flying_ducks >= MAX_FLYING_DUCKS ||
-        num_flying_ducks + num_falling_ducks >= MAX_ALL_DUCKS)
-        return;
-
-    float chance =
-        DUCK_DENSITY * (MAX_FLYING_DUCKS - num_flying_ducks) * (time - time_of_last_duck)
-        / MAX_FLYING_DUCKS;
-
-    if (frand() > chance)
+        num_flying_ducks + num_falling_ducks >= MAX_ALL_DUCKS ||
+        time < time_of_next_duck)
         return;
 
     int state = (frand() > 0.5) ? DUCK_FLYING_LEFT : DUCK_FLYING_RIGHT;
     const struct sprite_class *class = &duck_classes[state];
 
-    float off_x = screen_to_world_dx(class->width - class->origin_x);
-    float off_y = screen_to_world_dy(class->height - class->origin_y);
+    float off_x = screen_to_world_dx(class->origin_x);
+    float off_y = screen_to_world_dy(class->origin_y);
 
     float world_x;
     float world_y = frand() * DUCK_MIN_HEIGHT + off_y;
@@ -130,8 +128,14 @@ static void create_ducks(float time)
 
     elist_insert_back(&duck->link, &flying_ducks_list);
     scene_add_sprite(&game_scene, duck->sprite);
-    time_of_last_duck = time;
     num_flying_ducks++;
+
+    float time_term = 1.0f - elapsed_time / GAME_TIMEOUT;
+    float duck_term = 1 + num_flying_ducks;
+
+    time_of_next_duck +=
+        time_term * time_term * DUCK_MIN_INTERVAL +
+        duck_term * frand() * DUCK_INTERVAL_SCALE * DUCK_MAX_INTERVAL_1;
 }
 
 static void update_flying_ducks(float dt)
@@ -278,7 +282,7 @@ int game_init(void)
     num_falling_ducks = 0;
     init_elist(&flying_ducks_list);
     init_elist(&falling_ducks_list);
-    time_of_last_duck = 0.0f;
+    time_of_next_duck = 0.0f;
 
     return 0;
 }
@@ -300,7 +304,7 @@ int game_run(void)
 
     const float start_time = timer_get_time();
     float time = start_time;
-    float elapsed_time = 0;
+    elapsed_time = 0;
 
     unsigned mouse_button_old = MOUSE_NO_BUTTON;
 

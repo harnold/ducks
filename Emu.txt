@@ -12,8 +12,8 @@ FreeDOS on VirtualBox
 DOSEMU
 ------
 
-    - The game runs flawlessly.  Using the default settings, animations are a
-      bit jerky; to get smoother animations, increase the frequency of X
+    - The game runs flawlessly.  Using the default settings, animations are
+      a bit jerky; to get smoother animations, increase the frequency of X
       refreshes by setting
 
         $_X_updfreq = (1)

@@ -262,7 +262,7 @@ int game_init(void)
 
     for (int i = 0; i < TIMER_DIGITS; i++) {
         init_sprite(&timer_sprites[i], &digit_class,
-                    world_to_screen_x(TIMER_X_POS + i * digit_class.width),
+                    world_to_screen_x(TIMER_X_POS) + i * digit_class.width,
                     world_to_screen_y(TIMER_Y_POS),
                     TIMER_LAYER, 0);
         scene_add_sprite(&game_scene, &timer_sprites[i]);
@@ -272,7 +272,7 @@ int game_init(void)
 
     for (int i = 0; i < SCORE_DIGITS; i++) {
         init_sprite(&score_sprites[i], &digit_class,
-                    world_to_screen_x(SCORE_X_POS + i * digit_class.width),
+                    world_to_screen_x(SCORE_X_POS) + i * digit_class.width,
                     world_to_screen_y(SCORE_Y_POS),
                     SCORE_LAYER, 0);
         scene_add_sprite(&game_scene, &score_sprites[i]);
@@ -312,7 +312,7 @@ int game_run(void)
 
         if (_kbhit() && getch() == KEY_ESC) {
             ungetch(KEY_ESC);
-            quit = 1;
+            quit = true;
         }
 
         float dt = timer_get_time_delta();

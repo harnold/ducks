@@ -56,7 +56,7 @@ static const struct sprite_class pointer_class = {
 };
 
 static const struct sprite_class digit_class = {
-    &numbers_image, 32, 32, 1, 0.0f, 0.0f
+    &numbers_image, 32, 32, 10, 0.0f, 0.0f
 };
 
 static struct scene game_scene;

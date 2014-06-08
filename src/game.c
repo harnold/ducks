@@ -289,6 +289,14 @@ int game_init(void)
 
 void game_exit(void)
 {
+    for (int i = 0; i < TIMER_DIGITS; i++) {
+        destroy_sprite(&timer_sprites[i]);
+    }
+
+    for (int i = 0; i < SCORE_DIGITS; i++) {
+        destroy_sprite(&score_sprites[i]);
+    }
+
     destroy_ducks();
     destroy_scene(&game_scene);
     res_destroy_images();
